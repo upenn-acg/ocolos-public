@@ -52,7 +52,6 @@ void thread_function(vector<pair<long, long>> func_name, unordered_map<long, cal
             if (words[8].substr(words[8].size()-5, words[8].size()-1)=="@plt>") continue;
             call_site_info call_info;
             cout<<line;
-            //call_info.target_func = words[8].substr(1,words[8].size()-2);
             call_info.addr = convert_str_2_long(words[0].substr(0,words[0].size()-1));
             call_info.belonged_func = func_name[i].first;
 
@@ -99,11 +98,11 @@ int main(){
    FILE *fp3;
    char path3[1000];
    ocolos_env ocolos_environ;
-   string command = "cp "+ocolos_environ.target_binary_path+" "+ocolos_environ.dir_path;
+   string command = "cp "+ocolos_environ.target_binary_path+" "+ocolos_environ.tmp_data_path;
    system(command.c_str());
 
    vector<string> dir_names = split(ocolos_environ.target_binary_path, '/');
-   string new_target_binary = ocolos_environ.dir_path + dir_names[dir_names.size()-1];
+   string new_target_binary = ocolos_environ.tmp_data_path + dir_names[dir_names.size()-1];
 
    command = "strip -g "+new_target_binary;
    system(command.c_str());

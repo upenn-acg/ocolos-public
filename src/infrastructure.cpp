@@ -226,7 +226,7 @@ unordered_map<long, func_info> run_llvmbolt(const ocolos_env* ocolos_environ){
       }
    }
 		
-   printf("[tracer] %ld functions was BB-reordered by BOLT\n", changed_functions.size());
+   printf("[tracer] %ld functions was moved (functions reordered) by BOLT\n", changed_functions.size());
    fclose(fp1);
 
    #ifdef TIME_MEASUREMENT

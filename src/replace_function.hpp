@@ -2,7 +2,7 @@
 #define LD_PRELOAD_PATH "LD_PRELOAD=replace_function.so\0"
 #define MMAP_PAGE_SIZE 4*1024 // huge page: 2*1024*1024
 #define MMAP_PAGE_OFFSET 0b111111111111 // huge page: 0b111111111111111111111
-//#define DEBUG
+
 
 #include <dlfcn.h>
 #include <stdio.h>
@@ -33,8 +33,8 @@ using namespace std;
 
 extern char** environ;
 /* 
- * struct that stores all the paths and commands 
- * that are read from the config file. 
+ * struct that stores all the paths and commands that are read from the 
+ * config file. 
  */
 typedef struct ocolos_env{
    unordered_map<string, string> configs;
@@ -48,14 +48,13 @@ typedef struct ocolos_env{
 
    string debug_log;
    /*
-    * Constructor function that initialize all strings
-    * stored in this struct.
+    * Constructor function that initialize all strings stored in this struct.
     */
    ocolos_env(){}
 
    /*
-    * Get the absolute path of the current directory
-    * where the data to be inserted locates.
+    * Get the absolute path of the current directory where the data to be 
+    * inserted locates.
     */
    void get_dir_path(string);
 
@@ -90,14 +89,14 @@ void insert_machine_code(void);
 
 
 /*
- *
+ * create a tcp socket for receiving message sending from Ocolos' tracer. 
  */
 void create_tcp_socket(int & listen_fd, struct sockaddr_in & servaddr);
 
 
 
 /*
- * 
+ * Receive the data_path from the message sending from Ocolos' tracer.
  */
 string get_data_path(int listen_fd);
 
