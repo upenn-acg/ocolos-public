@@ -18,7 +18,7 @@ Please refer instructions from links or directly run commands listed below to in
 
 ## Download ocolos for mysql
 ```
-$ git clone git@github.com:upenn-acg/floar.git 
+$ git@github.com:upenn-acg/Ocolos-MySQL.git 
 ```
 
 
