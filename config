@@ -1,0 +1,24 @@
+#perf=/usr/bin/perf
+#nm=/usr/local/bin/nm
+objdump=/home.local/zyuxuan/binutils-gdb/binutils/objdump
+llvm-bolt=/home.local/zyuxuan/floar/BOLT/build/bin/llvm-bolt  
+perf2bolt=/home.local/zyuxuan/floar/BOLT/build/bin/perf2bolt
+
+## client binary path
+#mysql=/usr/local/bin/mysql
+
+
+## the path of directory that stores the temporary data 
+tmp_data_dir=/tmp/ocolos_data/
+
+## path where you put your replace_function.so
+lib=/home.local/zyuxuan/floar/ocolos_mysql/
+
+## the command to run the server process
+server_cmd=/usr/local/mysql/bin/mysqld --user=ocolos --port=3306 --basedir=/usr/local/mysql --datadir=/usr/local/mysql/data --plugin-dir=/usr/local/mysql/lib/plugin --log-error=ocolos.err --pid-file=ocolos.pid
+
+## the command to initialize the db for your benchmark 
+init_benchmark_cmd=/usr/local/bin/sysbench /home.local/zyuxuan/sysbench/src/lua/oltp_read_only.lua --threads=4 --mysql-host=127.0.0.1 --mysql-port=3306 --mysql-user=ocolos --mysql-db=ocolos_db --tables=4 --table-size=10000 --db-ps-mode=disable prepare
+
+## the command to run your benchmark 
+run_benchmark_cmd=/usr/local/bin/sysbench /home.local/zyuxuan/sysbench/src/lua/oltp_read_only.lua --threads=4 --events=100000000 --time=180 --mysql-host=127.0.0.1 --mysql-port=3306 --mysql-user=ocolos --mysql-db=ocolos_db --tables=4 --table-size=10000 --range_selects=off --db-ps-mode=disable --report-interval=1 run
