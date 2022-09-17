@@ -61,13 +61,13 @@ Then build `mysqld`[^2] from source:
 To initialize MySQL, run:
 ```bash
 > chown {user}:{user} {path to MySQL directory}
-> {path to MySQL directory}/bin/mysqld --initialize-insecure --user=root
-> {path to MySQL directory}/bin/mysqld_safe
+> {path to MySQL directory}/bin/mysqld --initialize-insecure --user=root --datadir={your MySQL's data dir path}
+> {path to MySQL directory}/bin/mysqld --user=root --port=3306 --datadir={your MySQL's data dir path}
 ```
 In another terminal, run:
 ```bash
 > mysql -u root
-> CREATE USER 'ocolos'@'localhost'
+> CREATE USER 'ocolos'@'localhost';
 > GRANT ALL PRIVILEGES ON *.* TO 'ocolos'@'localhost' WITH GRANT OPTION;
 > QUIT;
 ```
