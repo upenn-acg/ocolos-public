@@ -86,7 +86,7 @@ Please refer instructions in the following webpage:\
 - Navigate to `ocolos_mysql` directory.  
 - In the file `config`, specify the absolute path for `nm`,`perf`,`objdump`,`llvm-bolt`,`perf2bolt` [^3]
    [^3]: if `nm`,`objdump` and `perf` are already in shell, it's OK that their paths are not specified in `config`. This can be checked by `which nm`, `which objdump` and `which perf`.
-- In `config`, please also specify the command to run `MySQL server` and `sysbench`. The example command is given in the config file. 
+- In `config`, please also specify the commands to run `MySQL server` and `sysbench`. The example commands are given in the config file. 
    * _Note_: the first argument of the command (a.k.a. the binary being invoked in the command) should be written in its full path. 
 - Then run the following commands:
 
@@ -96,7 +96,7 @@ Please refer instructions in the following webpage:\
 > ./tracer
 
 ```
-- `make` will produce 2 executables + 1 shared library. 
+- `make` will produce 2 executables (`tracer` & `extract_call_sites`)+ 1 shared library (`replace_function.so`). 
    * If libunwind library is stored in other places instead of `/usr/local/lib`, you also need to edit Makefile and update it to the corresponding path.
    * If libunwind's header files are stored in other places instead of `/usr/local/include`, you also need to edit Makefile and update it to the corresponding path. 
 - `./extract_call_sites` will produce to 2 files which store all call sites information extracted from the target binary (a.k.a. `mysqld`) to the `tmp_data_dir` you specified in the config file. 
