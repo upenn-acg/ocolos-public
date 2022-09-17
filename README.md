@@ -116,4 +116,5 @@ In `src/utils.hpp`,
   * the content in the call stack when the target process is paused
   * `DEBUG_INFO` can also be defined in `src/replace_function.hpp`. In this way, the ld_preload library can store all machine code per function it inserted to the target process as a `uint8_t` format array into a file. The that file can be found in the `tmp_data_path` you defined in the config file. 
 - if `DEBUG` is defined, after code replacement, Ocolos will first send `sigstop` signal to target process and then resume the target process by `PTRACE_DETACH`. In this way, it allows debugging tools such as GDB to attach to the target process and observe what goes wrong after code replacement.
+
 After one run (~3 minutes), if you want to start another run, please first run `mysqladmin -u root shutdown` command to shutdown the current `MySQL` server process. 
