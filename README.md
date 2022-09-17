@@ -101,8 +101,8 @@ Please refer instructions in the following webpage:\
    * If libunwind's header files are stored in other places instead of `/usr/local/include`, you also need to edit Makefile and update it to the corresponding path. 
 - `./extract_call_sites` will produce to 2 files which store all call sites information extracted from the target binary (a.k.a. `mysqld`) to the `tmp_data_dir` you specified in the config file. 
 - `./tracer` will invoke both `MySQL` server process and sysbench workloads `oltp_read_only`, and then perform code layout optimization during runtime. 
-- The output of sysbench's throughput can be found in `sysbench_output.txt`. At about the 130th second, you will see a significant throughput improvement, since Ocolos has replace the code layout to be the optimized one at that time.
-- After one run (~3 minutes), if you want to start another run, please first run `mysqladmin -u root shutdown` command to shutdown the current `MySQL` server process. 
+   * The output of sysbench's throughput can be found in `sysbench_output.txt`. At about the 130th second, you will see a significant throughput improvement, since Ocolos has replace the code layout to be the optimized one at that time.
+   * After one run (~3 minutes), if you want to start another run, please first run `mysqladmin -u root shutdown` command to shutdown the current `MySQL` server process. 
  
 ## Miscellaneous
 In `src/utils.hpp`,
