@@ -103,6 +103,7 @@ Please refer instructions in the following webpage:\
 - `./tracer` will invoke both `MySQL` server process and sysbench workloads `oltp_read_only`, and then perform code layout optimization during runtime. 
 - The output of sysbench's throughput can be found in `sysbench_output.txt`. At about the 130th second, you will see a significant throughput improvement, since Ocolos has replace the code layout to be the optimized one.
 
+After one run (~3 minutes), if you want to start another run, please first run `mysqladmin -u root shutdown` command to shutdown the current `MySQL` server process. 
  
 ## Miscellaneous
 In `src/utils.hpp`,
@@ -117,4 +118,4 @@ In `src/utils.hpp`,
   * `DEBUG_INFO` can also be defined in `src/replace_function.hpp`. In this way, the ld_preload library can store all machine code per function it inserted to the target process as a `uint8_t` format array into a file. The that file can be found in the `tmp_data_path` you defined in the config file. 
 - if `DEBUG` is defined, after code replacement, Ocolos will first send `sigstop` signal to target process and then resume the target process by `PTRACE_DETACH`. In this way, it allows debugging tools such as GDB to attach to the target process and observe what goes wrong after code replacement.
 
-After one run (~3 minutes), if you want to start another run, please first run `mysqladmin -u root shutdown` command to shutdown the current `MySQL` server process. 
+
