@@ -61,8 +61,8 @@ Then build `mysqld`[^2] from source:
 To initialize MySQL, run:
 ```bash
 > chown {user}:{user} {path to MySQL directory}
-> {path to MySQL directory}/bin/mysqld --initialize-insecure --user=root --datadir={your MySQL\'s data dir path} 
-> {path to MySQL directory}/bin/mysqld --user=root --port=3306 --datadir={your MySQL\'s data dir path}
+> {path to MySQL directory}/bin/mysqld --initialize-insecure --user=root --datadir={your data dir path of MySQL} 
+> {path to MySQL directory}/bin/mysqld --user=root --port=3306 --datadir={your data dir path of MySQL}
 ```
 In another terminal, run:
 ```bash
