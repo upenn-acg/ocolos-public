@@ -82,7 +82,7 @@ Please refer instructions in the following webpage:\
 [https://github.com/akopytov/sysbench](https://github.com/akopytov/sysbench) 
 
 
-## Build Ocolos
+## Build & run Ocolos
 - Navigate to `ocolos_mysql` directory.  
 - In the file `config`, specify the absolute path for `nm`,`perf`,`objdump`,`llvm-bolt`,`perf2bolt` [^3]
    [^3]: if `nm`,`objdump` and `perf` are already in shell, it's OK that their paths are not specified in `config`. This can be checked by `which nm`, `which objdump` and `which perf`.
