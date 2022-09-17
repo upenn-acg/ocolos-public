@@ -102,8 +102,7 @@ Please refer instructions in the following webpage:\
 - `./extract_call_sites` will produce to 2 files which store all call sites information extracted from the target binary (a.k.a. `mysqld`) 
 - `./tracer` will invoke both `MySQL` server process and sysbench workloads `oltp_read_only`, and then perform code layout optimization during runtime. 
 - The output of sysbench's throughput can be found in `sysbench_output.txt`. At about the 130th second, you will see a significant throughput improvement, since Ocolos has replace the code layout to be the optimized one.
-
-After one run (~3 minutes), if you want to start another run, please first run `mysqladmin -u root shutdown` command to shutdown the current `MySQL` server process. 
+- After one run (~3 minutes), if you want to start another run, please first run `mysqladmin -u root shutdown` command to shutdown the current `MySQL` server process. 
  
 ## Miscellaneous
 In `src/utils.hpp`,
