@@ -62,6 +62,10 @@ To initialize MySQL, run:
 ```bash
 > chown {user}:{user} {path to MySQL directory}
 > {path to MySQL directory}/bin/mysqld --initialize-insecure --user=root
+> {path to MySQL directory}/bin/mysqld_safe
+```
+In another terminal, run:
+```bash
 > mysql -u root
 > CREATE USER 'ocolos'@'localhost'
 > GRANT ALL PRIVILEGES ON *.* TO 'ocolos'@'localhost' WITH GRANT OPTION;
