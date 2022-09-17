@@ -43,7 +43,7 @@ Please follow the commands below to install `BOLT`
 > cd mysql-server 
 > git checkout 6846e6b2f72931991cc9fd589dc9946ea2ab58c9 
 ```
-In `CMakeList.txt`, please add: \
+In `CMakeList.txt`, at line 582, please add: \
 `STRING_APPEND(CMAKE_C_FLAGS  " -fno-jump-tables")` \
 `STRING_APPEND(CMAKE_CXX_FLAGS " -fno-jump-tables")` 
 
