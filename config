@@ -7,7 +7,6 @@ perf2bolt=/home.local/zyuxuan/floar/BOLT/build/bin/perf2bolt
 ## client binary path
 #mysql=/usr/local/bin/mysql
 
-
 ## the path of directory that stores the temporary data 
 tmp_data_dir=/tmp/ocolos_data/
 
