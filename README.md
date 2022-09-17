@@ -69,6 +69,7 @@ In another terminal, run:
 > mysql -u root
 > CREATE USER 'ocolos'@'localhost';
 > GRANT ALL PRIVILEGES ON *.* TO 'ocolos'@'localhost' WITH GRANT OPTION;
+> CREATE DATABASE ocolos_db;
 > QUIT;
 ```
 _Note_: 
