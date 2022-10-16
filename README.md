@@ -71,6 +71,7 @@ In another terminal, run:
 > GRANT ALL PRIVILEGES ON *.* TO 'ocolos'@'localhost' WITH GRANT OPTION;
 > CREATE DATABASE ocolos_db;
 > QUIT;
+> mysqladmin -u root shutdown
 ```
 _Note_: 
 1. {path to MySQL directory} is normally `/usr/local/mysql` unless otherwise specified during MySQL server's installation.  
