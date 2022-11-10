@@ -14,7 +14,7 @@ Please refer instructions from links or directly run commands listed below to in
 - Rust: `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh` 
 - boost_1_73_0 (for MySQL): [https://www.boost.org/users/history/version_1_73_0.html](https://www.boost.org/users/history/version_1_73_0.html) 
 - binutils (for objdump) [^1] : [https://ftp.gnu.org/gnu/binutils/](https://ftp.gnu.org/gnu/binutils/) 
-- boost: `sudo apt-get install libboost-dev` (for Ubuntu)
+- boost: `sudo apt-get install libboost-all-dev` (for Ubuntu)
 [^1]:If your `objdump` version is older than 2.27, please download the latest version of `binutils`.  
 
 ## Download ocolos for mysql
