@@ -46,6 +46,8 @@ Please follow the commands below to install `BOLT`
 In `CMakeList.txt`, at line 582, please add: \
 `STRING_APPEND(CMAKE_C_FLAGS  " -fno-jump-tables")` \
 `STRING_APPEND(CMAKE_CXX_FLAGS " -fno-jump-tables")` 
+Also, in `CMakeList.txt`, turn of ld.gold linker: \
+change `OPTION(USE_LD_GOLD "Use GNU gold linker" ON)` to be `OPTION(USE_LD_GOLD "Use GNU gold linker" OFF)`
 
 Then build `mysqld`[^2] from source:
 ```bash
