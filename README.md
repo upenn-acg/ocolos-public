@@ -53,7 +53,7 @@ In `CMakeList.txt`, at line 582, please add: \
 Also, in `CMakeList.txt`, turn off `ld.gold` linker: \
 change `OPTION(USE_LD_GOLD "Use GNU gold linker" ON)` to be `OPTION(USE_LD_GOLD "Use GNU gold linker" OFF)`
 
-Then build `mysqld`[^2] from source:
+Then build `mysqld` from source:
 ```bash
 > export CC=gcc 
 > export CXX=g++
@@ -62,7 +62,7 @@ Then build `mysqld`[^2] from source:
 > make -j
 > make install
 ```
-[^2]: The target binary must to be compiled by `Clang` rather than `gcc`. A `gcc`-compiled binary will not work with `Ocolos`.
+
 
 To initialize MySQL, run:
 ```bash
@@ -91,8 +91,8 @@ Please refer instructions in the following webpage:\
 
 ## Build & run Ocolos
 - Navigate to `ocolos_mysql` directory.  
-- In the file `config`, specify the absolute path for `nm`,`perf`,`objdump`,`llvm-bolt`,`perf2bolt` [^3]
-   [^3]: if `nm`,`objdump` and `perf` are already in shell, it's OK that their paths are not specified in `config`. This can be checked by `which nm`, `which objdump` and `which perf`.
+- In the file `config`, specify the absolute path for `nm`,`perf`,`objdump`,`llvm-bolt`,`perf2bolt` [^2]
+   [^2]: if `nm`,`objdump` and `perf` are already in shell, it's OK that their paths are not specified in `config`. This can be checked by `which nm`, `which objdump` and `which perf`.
 - In `config`, please also specify the commands to run `MySQL server` and `sysbench`. The example commands are given in the config file. 
    * _Note_: the first argument of the command (a.k.a. the binary being invoked in the command) should be written in its full path. 
 - Then run the following commands:
