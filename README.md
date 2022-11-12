@@ -55,8 +55,8 @@ change `OPTION(USE_LD_GOLD "Use GNU gold linker" ON)` to be `OPTION(USE_LD_GOLD 
 
 Then build `mysqld`[^2] from source:
 ```bash
-> export CC={the path of the Clang binary} 
-> export CXX={the path of the Clang++ binary (actually symbolic link)} 
+> export CC=gcc 
+> export CXX=g++
 > mkdir build && cd build 
 > cmake .. -DWITH_BOOST={path of the boost_1_73_0 directory} -DCMAKE_CXX_LINK_FLAGS=-Wl,--emit-relocs -DCMAKE_C_LINK_FLAGS=-Wl,--emit-relocs -DBUILD_CONFIG=mysql_release 
 > make -j
