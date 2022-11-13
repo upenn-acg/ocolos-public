@@ -8,7 +8,6 @@ For the demonstration purpose, we integrate `MySQL` and `sysbench` to Ocolos, so
 
 ## Prerequisites
 Please refer instructions from links or directly run commands listed below to install prerequisites: 
-- Clang(for building MySQL): [https://clang.llvm.org/get_started.html](https://clang.llvm.org/get_started.html) 
 - Linux Perf:`sudo apt-get install linux-tools-common linux-tools-generic` 
 - libunwind: [https://github.com/libunwind/libunwind](https://github.com/libunwind/libunwind) 
 - Rust: `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh` 
