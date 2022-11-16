@@ -43,8 +43,9 @@ Please follow the commands below to install `BOLT`
 > cd mysql-server 
 > git checkout 6846e6b2f72931991cc9fd589dc9946ea2ab58c9 
 ```
-In `CMakeList.txt`, at line 580, please add [^2]: \
-[^2]: If the mysqld binary compiled by gcc generates `callq` instructions rather than `call` instruction, please refer to the solution discussed in [this page](https://github.com/upenn-acg/ocolos-public/issues/1). You may need to also append `-S` flag to the CMakeList.txt.
+In `CMakeList.txt`, at line 580, please add [^2]: 
+[^2]: If the mysqld binary compiled by gcc generates `callq` instructions rather than `call` instruction, please refer to the solution discussed in [this page](https://github.com/upenn-acg/ocolos-public/issues/1). You may need to also append `-S` flag to the CMakeList.txt.\
+
 `STRING_APPEND(CMAKE_C_FLAGS  " -fno-jump-tables")` \
 `STRING_APPEND(CMAKE_CXX_FLAGS " -fno-jump-tables")` \
 `STRING_APPEND(CMAKE_C_FLAGS " -no-pie")` \
