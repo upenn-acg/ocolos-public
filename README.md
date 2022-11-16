@@ -43,7 +43,8 @@ Please follow the commands below to install `BOLT`
 > cd mysql-server 
 > git checkout 6846e6b2f72931991cc9fd589dc9946ea2ab58c9 
 ```
-In `CMakeList.txt`, at line 580, please add: \
+In `CMakeList.txt`, at line 580, please add [^2]: \
+[^2]: If the mysqld binary compiled by gcc generates `callq` instructions rather than `call` instruction, please refer to the solution discussed in [this page](https://github.com/upenn-acg/ocolos-public/issues/1). You may need to also append `-S` flag to the CMakeList.txt.
 `STRING_APPEND(CMAKE_C_FLAGS  " -fno-jump-tables")` \
 `STRING_APPEND(CMAKE_CXX_FLAGS " -fno-jump-tables")` \
 `STRING_APPEND(CMAKE_C_FLAGS " -no-pie")` \
@@ -90,8 +91,8 @@ Please refer instructions in the following webpage:\
 
 ## Build & run Ocolos
 - Navigate to `ocolos_mysql` directory.  
-- In the file `config`, specify the absolute path for `nm`,`perf`,`objdump`,`llvm-bolt`,`perf2bolt` [^2]
-   [^2]: if `nm`,`objdump` and `perf` are already in shell, it's OK that their paths are not specified in `config`. This can be checked by `which nm`, `which objdump` and `which perf`.
+- In the file `config`, specify the absolute path for `nm`,`perf`,`objdump`,`llvm-bolt`,`perf2bolt` [^3]
+   [^3]: if `nm`,`objdump` and `perf` are already in shell, it's OK that their paths are not specified in `config`. This can be checked by `which nm`, `which objdump` and `which perf`.
 - In `config`, please also specify the commands to run `MySQL server` and `sysbench`. The example commands are given in the config file. 
    * _Note_: the first argument of the command (a.k.a. the binary being invoked in the command) should be written in its full path. 
 - Then run the following commands:
