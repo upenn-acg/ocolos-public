@@ -3,10 +3,10 @@
 objdump=/home/ocolos/binutils-gdb/binutils/objdump
 llvm-bolt=/home/ocolos/floar/BOLT/build/bin/llvm-bolt  
 perf2bolt=/home/ocolos/floar/BOLT/build/bin/perf2bolt
-#mysql=/usr/local/bin/mysql
+mysql=/usr/local/bin/mysql
 
 
-## NOTE: before using the directory you listed here, please
+## NOTE: before using the directory you list here, please
 ## first make sure that the directory is created and has 
 ## the correct ownership.
 ## the path of directory that stores the temporary data 
