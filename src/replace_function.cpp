@@ -1,4 +1,5 @@
 #include "replace_function.hpp"
+#define DEBUG_INFO
 
 void ocolos_env::get_dir_path(string data_path){
    ocolos_env::tmp_data_path        = data_path;
@@ -80,7 +81,7 @@ void insert_code_to_orig_text_sec(FILE* pFile, FILE* recordFile, long base_n){
       address += base_n;
       // get the page aligned address of the function pointer
       void*	page_aligned_addr = (void*)((long)address & (~MMAP_PAGE_OFFSET));
-      printf("[tracee (lib)] page aligned addr = %p\n", page_aligned_addr);
+      //printf("[tracee (lib)] page aligned addr = %p\n", page_aligned_addr);
       for (long offset = 0; offset<=address+len-(long)page_aligned_addr+MMAP_PAGE_SIZE; offset += MMAP_PAGE_SIZE){
          long new_addr = offset+(long)page_aligned_addr;				
          if (allocated_pages.find(new_addr)==allocated_pages.end()){
@@ -328,7 +329,7 @@ void insert_machine_code(void){
          fclose (pFile3);
       }
       if (pFile4 !=NULL){		
-       //  insert_unmoved_func(pFile4, recordFile, base_n);
+         insert_unmoved_func(pFile4, recordFile, base_n);
          fclose (pFile4);
       }
    }

@@ -84,13 +84,16 @@ int main(){
       vector<unw_word_t> call_stack_ips = unwind_call_stack(tids);
       unordered_map<long, func_info> func_in_call_stack =  get_func_in_call_stack(call_stack_ips, func_heap);
       unordered_map<long, func_info> unmoved_func_not_in_call_stack = get_unmoved_func_not_in_call_stack(func_in_call_stack, unmoved_func);
-	
+
+      // for continuous optimization
+      write_func_on_call_stack_into_file(&ocolos_environ, func_in_call_stack);   
+
       // extract the machine code of each function
       // from the output of objdump
       vector<long> addr_unmoved_func_not_in_call_stack = get_keys_to_array(unmoved_func_not_in_call_stack); 
       extract_call_sites(pFile1, bolted_func, func_in_call_stack, &ocolos_environ);
 		
-      //write_functions(bolted_binary.c_str(), unmoved_func_bin.c_str(), addr_unmoved_func_not_in_call_stack.data(), addr_unmoved_func_not_in_call_stack.size());
+      write_functions(ocolos_environ.bolted_binary_path.c_str(), ocolos_environ.unmoved_func_bin.c_str(), addr_unmoved_func_not_in_call_stack.data(), addr_unmoved_func_not_in_call_stack.size());
 	
 
       fflush(pFile1);
@@ -143,8 +146,11 @@ int main(){
       t.join();      
       printf("[tracer][OK] code replacement done!\n");
       #ifdef DEBUG
-      while(true);
+//      while(true);
       #endif
+
+      /*--------- run cont optimization ---------*/
+//      run_perf_record(target_pid, &ocolos_environ);
    }
 }
 

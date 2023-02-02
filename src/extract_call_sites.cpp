@@ -47,7 +47,7 @@ void thread_function(vector<pair<long, long>> func_name, unordered_map<long, cal
       for (unsigned k=0; k<assembly_lines.size()-1; k++){
          string line = assembly_lines[k];
          vector<string> words = split_line(line);
-         if ((words.size()>8) && ((words[6]=="callq")||(words[6]=="call"))){
+         if ((words.size()>8) && ((words[6]=="call")||(words[6]=="callq"))){
             // if it's a library call
             if (words[8].substr(words[8].size()-5, words[8].size()-1)=="@plt>") continue;
             call_site_info call_info;
@@ -190,6 +190,6 @@ int main(){
    boost::archive::binary_oarchive oa1(ofs1,boost::archive::no_codecvt);
    oa1 << call_sites_list;
 
-   command = "rm -rf "+new_target_binary;
+//   command = "rm -rf "+new_target_binary;
    system(command.c_str());
 }
