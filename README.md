@@ -112,6 +112,10 @@ Please refer instructions in the following webpage:\
    * The output of sysbench's throughput can be found in `sysbench_output.txt`. At about the 130th second, you will see a significant throughput improvement, since Ocolos has replace the code layout to be the optimized one at that time.
    * After one run (~3 minutes), if you want to start another run, please first run `mysqladmin -u root shutdown` command to shutdown the current `MySQL` server process. 
  
+## The support of continuous optimization
+- To switch to the continuous optimization branch, please run `git checkout continuous-optimization`.
+- The [README.md](https://github.com/upenn-acg/ocolos-public/tree/continuous-optimization#readme) of the `continuous-optimization` branch contains instructions about how that version of `Ocolos` works.
+
 ## Miscellaneous
 In `src/utils.hpp`,
 - if `TIME_MEASUREMENT` is defined, Ocolos will print the execution time of code replacement;
