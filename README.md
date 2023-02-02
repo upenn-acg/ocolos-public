@@ -17,8 +17,9 @@ Please refer instructions from links or directly run commands listed below to in
 [^1]:If your `objdump` version is older than 2.27, please download the latest version of `binutils`.  
 
 ## Download ocolos for mysql
-```
-$ git clone git@github.com:upenn-acg/ocolos-public.git
+```bash
+$ > git clone git@github.com:upenn-acg/ocolos-public.git
+$ > git checkout continuous-optimization
 ```
 
 
@@ -26,14 +27,11 @@ $ git clone git@github.com:upenn-acg/ocolos-public.git
 To use `llvm-bolt` and `perf2bolt` utilities, `BOLT` needs to be installed. \
 Please follow the commands below to install `BOLT` 
 ```bash
-> git clone https://github.com/facebookincubator/BOLT llvm-bolt
+> git clone git@github.com:upenn-acg/BOLT.git llvm-bolt
 > cd llvm-bolt
-> git checkout 88c70afe9d388ad430cc150cc158641701397f70
-> cp {path to ocolos_mysql directory}/BOLT_replace/RewriteInstance.cpp bolt/lib/Rewrite/RewriteInstance.cpp
-> cp {path to ocolos_mysql directory}/BOLT_replace/BinaryContext.cpp bolt/lib/Core/BinaryContext.cpp
-> cd .. && mkdir build && cd build
-> cmake -G Ninja ../llvm-bolt/llvm -DLLVM_TARGETS_TO_BUILD="X86;AArch64" -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_ASSERTIONS=ON -DLLVM_ENABLE_PROJECTS="clang;lld;bolt"
-> ninja
+> mkdir build && cd build
+> cmake -G "Unix Makefiles" ../llvm-bolt/llvm -DLLVM_TARGETS_TO_BUILD="X86;AArch64" -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_ASSERTIONS=ON -DLLVM_ENABLE_PROJECTS="clang;lld;bolt"
+> make -j
 ```
 
 
