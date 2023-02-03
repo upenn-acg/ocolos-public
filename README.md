@@ -117,11 +117,13 @@ Please refer instructions in the following webpage:\
    * Function Map Table, which is added by us.
 - The command to add BAT and Function Map Table to the BOLTed binary is
 ```
-llvm-bolt mysqld -o mysqld.bolt --enable-bat --enable-func-map-table -data=perf_c0.fdata -reorder-blocks=cache+ -reorder-functions=hfsort
+perf2bolt -p perf_c0.data -o perf_c0.fdata mysqld
+llvm-bolt mysqld -o mysqld_0.bolt --enable-bat --enable-func-map-table -data=perf_c0.fdata -reorder-blocks=cache+ -reorder-functions=hfsort
 ```
-- To make profile collected from C1 work with `perf2bolt`
+- To make profile collected from C1 work with `perf2bolt`, and then to produce C1's `mysqld.bolt`
 ```
-perf2bolt --ignore-build-id --cont-opt --call-stack-func=callstack_func.bin -p perf_c1.data -o perf_c1.fdata mysqld.bolt
+perf2bolt --ignore-build-id --cont-opt --call-stack-func=callstack_func.bin -p perf_c1.data -o perf_c1.fdata mysqld_0.bolt
+llvm-bolt mysqld -o mysqld_1.bolt --enable-bat --enable-func-map-table -data=perf_c1.fdata -reorder-blocks=cache+ -reorder-functions=hfsort
 ```
 - [Here](https://github.com/upenn-acg/ocolos-public/blob/continuous-optimization/scripts/C1_BOLTed_performance_test.sh) is the script that measures the performance of `mysqld.bolt` produced during C1. 
 
