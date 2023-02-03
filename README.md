@@ -109,7 +109,17 @@ Please refer instructions in the following webpage:\
 - `./tracer` will invoke both `MySQL` server process and sysbench workloads `oltp_read_only`, and then perform code layout optimization during runtime. 
    * The output of sysbench's throughput can be found in `sysbench_output.txt`. At about the 130th second, you will see a significant throughput improvement, since Ocolos has replace the code layout to be the optimized one at that time.
    * After one run (~3 minutes), if you want to start another run, please first run `mysqladmin -u root shutdown` command to shutdown the current `MySQL` server process. 
- 
+
+## Using profile from C1 to build BOLTed binary
+- We've modified BOLT to make it support converting `perf.data` collected from C1 to be the `perf.fdata` that `llvm-bolt` can use.
+- To enable this functionality, the `mysqld.bolt` produced from C0 must contain 
+   * BAT (BOLT Address Translation), which is already implemented in BOLT's source code;
+   * Function Map Table, which is added by us.
+- the command to add BAT and Function Map Table to the BOLTed binary is
+```
+
+```
+
 ## Miscellaneous
 In `src/utils.hpp`,
 - if `TIME_MEASUREMENT` is defined, Ocolos will print the execution time of code replacement;
