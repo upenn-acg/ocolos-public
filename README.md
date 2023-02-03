@@ -117,13 +117,13 @@ Please refer instructions in the following webpage:\
       + BAT (BOLT Address Translation), which is already implemented in BOLT's source code;
       + Function Map Table, which is added by us.
 - In C0, the `perf2bolt` and `llvm-bolt` command to add BAT and Function Map Table to the BOLTed binary is
-```
+```bash
 > perf2bolt -p perf_c0.data -o perf_c0.fdata mysqld
 > llvm-bolt mysqld -o mysqld_0.bolt --enable-bat --enable-func-map-table -data=perf_c0.fdata -reorder-blocks=cache+ -reorder-functions=hfsort
 ```
 - In C1, to make profile collected from C1 work with `perf2bolt`, and then to produce C1's `mysqld.bolt`, the `perf2bolt` and `llvm-bolt` command is changed to be the following commands
    * In the `perf2bolt` command, `callstack_func.bin` is produced by `Ocolos` during C0's code replacement. It contains a snapshot of functions on the call stack when the target process is paused.
-```
+```bash
 > perf2bolt --ignore-build-id --cont-opt --call-stack-func=callstack_func.bin -p perf_c1.data -o perf_c1.fdata mysqld_0.bolt
 > llvm-bolt mysqld -o mysqld_1.bolt --enable-bat --enable-func-map-table -data=perf_c1.fdata -reorder-blocks=cache+ -reorder-functions=hfsort
 ```      
