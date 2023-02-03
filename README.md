@@ -110,6 +110,7 @@ Please refer instructions in the following webpage:\
    * The output of sysbench's throughput can be found in `sysbench_output.txt`. At about the 130th second, you will see a significant throughput improvement, since Ocolos has replace the code layout to be the optimized one at that time.
    * After one run (~3 minutes), if you want to start another run, please first run `mysqladmin -u root shutdown` command to shutdown the current `MySQL` server process. 
 
+
 ## Use profile from C1 to build BOLTed binary
 - We've modified BOLT to make it support converting `perf.data` collected from C1 to be the `perf.fdata` that `llvm-bolt` can use.
    * To enable this functionality, the `mysqld.bolt` produced from C0 must contain 
@@ -120,14 +121,15 @@ Please refer instructions in the following webpage:\
 > perf2bolt -p perf_c0.data -o perf_c0.fdata mysqld
 > llvm-bolt mysqld -o mysqld_0.bolt --enable-bat --enable-func-map-table -data=perf_c0.fdata -reorder-blocks=cache+ -reorder-functions=hfsort
 ```
-- In C1, to make profile collected from C1 work with `perf2bolt`, and then to produce C1's `mysqld.bolt`, the `perf2bolt` and `llvm-bolt` command is changed to be
+- In C1, to make profile collected from C1 work with `perf2bolt`, and then to produce C1's `mysqld.bolt`, the `perf2bolt` and `llvm-bolt` command is changed to be the following commands
+   * In the `perf2bolt` command, `callstack_func.bin` is produced by `Ocolos` during C0's code replacement. It contains a snapshot of functions on the call stack when the target process is paused.
 ```
 > perf2bolt --ignore-build-id --cont-opt --call-stack-func=callstack_func.bin -p perf_c1.data -o perf_c1.fdata mysqld_0.bolt
 > llvm-bolt mysqld -o mysqld_1.bolt --enable-bat --enable-func-map-table -data=perf_c1.fdata -reorder-blocks=cache+ -reorder-functions=hfsort
-```
-   * where `callstack_func.bin` is produced by `Ocolos` during C0's code replacement. It contains a snapshot of functions on the call stack when the target process is paused.
-   
-- [Here](https://github.com/upenn-acg/ocolos-public/blob/continuous-optimization/scripts/C1_BOLTed_performance_test.sh) is the script that measures the performance of `mysqld.bolt` produced during C1. 
+```      
+- We also have a script to show an example.
+   * The script shows how to use the profile collected from Ocolos' C1 + the mysqld.bolt produced from Ocolos' C0 to build a new binary
+   * The script can be found [Here](https://github.com/upenn-acg/ocolos-public/blob/continuous-optimization/scripts/C1_BOLTed_performance_test.sh). 
 
 ## Miscellaneous
 In `src/utils.hpp`,
