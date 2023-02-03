@@ -112,11 +112,11 @@ Please refer instructions in the following webpage:\
 
 
 ## Continuous Optimization - use profile from C1 to build BOLTed binary
-- We've modified BOLT to make it support converting `perf.data` collected from C1 to be the `perf.fdata` that `llvm-bolt` can use.
+- We've modified `BOLT` to make it support converting `perf.data` collected from C1 to be the `perf.fdata` that `llvm-bolt` can use.
    * To enable this functionality, the `mysqld.bolt` produced from C0 must contain 
-      + BAT (BOLT Address Translation), which is already implemented in BOLT's source code;
-      + Function Map Table, which is added by us.
-- In C0, the `perf2bolt` and `llvm-bolt` command to add BAT and Function Map Table to the BOLTed binary is
+      + `BAT` (BOLT Address Translation), which is already implemented in BOLT's source code;
+      + `Function Map Table`, which is added by us for performing reverse BOLT Address Translation.
+- In C0, the `perf2bolt` and `llvm-bolt` command to add `BAT` and `Function Map Table` to the BOLTed binary is
 ```bash
 > perf2bolt -p perf_c0.data -o perf_c0.fdata mysqld
 > llvm-bolt mysqld -o mysqld_0.bolt --enable-bat --enable-func-map-table -data=perf_c0.fdata -reorder-blocks=cache+ -reorder-functions=hfsort
@@ -136,8 +136,8 @@ In `src/utils.hpp`,
 - if `TIME_MEASUREMENT` is defined, Ocolos will print the execution time of code replacement;
 - if `MEASUREMENT` is defined, Ocolos will print metrics such as:  
   * the number of functions on the call stack when target process is paused,
-  * the number of functions that are moved by BOLT,
-  * the number of functions that are in the BOLT and original functions.
+  * the number of functions that are moved by `BOLT`,
+  * the number of functions that are in the `BOLT` and original functions.
 - if `DEBUG_INFO` is defined, Ocolos will print debug information such as:
   * the information about detailed behavior of tracer
   * the content in the call stack when the target process is paused
