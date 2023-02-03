@@ -123,6 +123,7 @@ llvm-bolt mysqld -o mysqld.bolt --enable-bat --enable-func-map-table -data=perf_
 ```
 perf2bolt --ignore-build-id --cont-opt --call-stack-func=callstack_func.bin -p perf_c1.data -o perf_c1.fdata mysqld.bolt
 ```
+- [Here](https://github.com/upenn-acg/ocolos-public/blob/continuous-optimization/scripts/C1_BOLTed_performance_test.sh) is the script that measures the performance of `mysqld.bolt` produced during C1. 
 
 ## Miscellaneous
 In `src/utils.hpp`,
