@@ -111,7 +111,7 @@ Please refer instructions in the following webpage:\
    * After one run (~3 minutes), if you want to start another run, please first run `mysqladmin -u root shutdown` command to shutdown the current `MySQL` server process. 
 
 
-## Use profile from C1 to build BOLTed binary
+## Continuous Optimization - use profile from C1 to build BOLTed binary
 - We've modified BOLT to make it support converting `perf.data` collected from C1 to be the `perf.fdata` that `llvm-bolt` can use.
    * To enable this functionality, the `mysqld.bolt` produced from C0 must contain 
       + BAT (BOLT Address Translation), which is already implemented in BOLT's source code;
