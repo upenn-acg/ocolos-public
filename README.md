@@ -110,7 +110,7 @@ Please refer instructions in the following webpage:\
    * The output of sysbench's throughput can be found in `sysbench_output.txt`. At about the 130th second, you will see a significant throughput improvement, since Ocolos has replace the code layout to be the optimized one at that time.
    * After one run (~3 minutes), if you want to start another run, please first run `mysqladmin -u root shutdown` command to shutdown the current `MySQL` server process. 
 
-## Using profile from C1 to build BOLTed binary
+## Use profile from C1 to build BOLTed binary
 - We've modified BOLT to make it support converting `perf.data` collected from C1 to be the `perf.fdata` that `llvm-bolt` can use.
 - To enable this functionality, the `mysqld.bolt` produced from C0 must contain 
    * BAT (BOLT Address Translation), which is already implemented in BOLT's source code;
