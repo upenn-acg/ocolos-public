@@ -115,9 +115,13 @@ Please refer instructions in the following webpage:\
 - To enable this functionality, the `mysqld.bolt` produced from C0 must contain 
    * BAT (BOLT Address Translation), which is already implemented in BOLT's source code;
    * Function Map Table, which is added by us.
-- the command to add BAT and Function Map Table to the BOLTed binary is
+- The command to add BAT and Function Map Table to the BOLTed binary is
 ```
-
+llvm-bolt mysqld -o mysqld.bolt --enable-bat --enable-func-map-table -data=perf_c0.fdata -reorder-blocks=cache+ -reorder-functions=hfsort
+```
+- To make profile collected from C1 work with `perf2bolt`
+```
+perf2bolt --ignore-build-id --cont-opt --call-stack-func=callstack_func.bin -p perf_c1.data -o perf_c1.fdata mysqld.bolt
 ```
 
 ## Miscellaneous
