@@ -112,15 +112,15 @@ Please refer instructions in the following webpage:\
 
 ## Use profile from C1 to build BOLTed binary
 - We've modified BOLT to make it support converting `perf.data` collected from C1 to be the `perf.fdata` that `llvm-bolt` can use.
-- To enable this functionality, the `mysqld.bolt` produced from C0 must contain 
-   * BAT (BOLT Address Translation), which is already implemented in BOLT's source code;
-   * Function Map Table, which is added by us.
-- The command to add BAT and Function Map Table to the BOLTed binary is
+   * To enable this functionality, the `mysqld.bolt` produced from C0 must contain 
+      + BAT (BOLT Address Translation), which is already implemented in BOLT's source code;
+      + Function Map Table, which is added by us.
+- In C0, the `perf2bolt` and `llvm-bolt` command to add BAT and Function Map Table to the BOLTed binary is
 ```
 > perf2bolt -p perf_c0.data -o perf_c0.fdata mysqld
 > llvm-bolt mysqld -o mysqld_0.bolt --enable-bat --enable-func-map-table -data=perf_c0.fdata -reorder-blocks=cache+ -reorder-functions=hfsort
 ```
-- To make profile collected from C1 work with `perf2bolt`, and then to produce C1's `mysqld.bolt`
+- In C1, to make profile collected from C1 work with `perf2bolt`, and then to produce C1's `mysqld.bolt`, the `perf2bolt` and `llvm-bolt` command is changed to be
    * where `callstack_func.bin` is produced by `Ocolos` during C0's code replacement. It contains a snapshot of functions on the call stack when the target process is paused.
 ```
 > perf2bolt --ignore-build-id --cont-opt --call-stack-func=callstack_func.bin -p perf_c1.data -o perf_c1.fdata mysqld_0.bolt
