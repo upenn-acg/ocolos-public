@@ -121,11 +121,11 @@ Please refer instructions in the following webpage:\
 > llvm-bolt mysqld -o mysqld_0.bolt --enable-bat --enable-func-map-table -data=perf_c0.fdata -reorder-blocks=cache+ -reorder-functions=hfsort
 ```
 - In C1, to make profile collected from C1 work with `perf2bolt`, and then to produce C1's `mysqld.bolt`, the `perf2bolt` and `llvm-bolt` command is changed to be
-   * where `callstack_func.bin` is produced by `Ocolos` during C0's code replacement. It contains a snapshot of functions on the call stack when the target process is paused.
 ```
 > perf2bolt --ignore-build-id --cont-opt --call-stack-func=callstack_func.bin -p perf_c1.data -o perf_c1.fdata mysqld_0.bolt
 > llvm-bolt mysqld -o mysqld_1.bolt --enable-bat --enable-func-map-table -data=perf_c1.fdata -reorder-blocks=cache+ -reorder-functions=hfsort
 ```
+   * where `callstack_func.bin` is produced by `Ocolos` during C0's code replacement. It contains a snapshot of functions on the call stack when the target process is paused.
    
 - [Here](https://github.com/upenn-acg/ocolos-public/blob/continuous-optimization/scripts/C1_BOLTed_performance_test.sh) is the script that measures the performance of `mysqld.bolt` produced during C1. 
 
