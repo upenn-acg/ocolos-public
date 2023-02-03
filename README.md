@@ -111,11 +111,12 @@ Please refer instructions in the following webpage:\
    * After one run (~3 minutes), if you want to start another run, please first run `mysqladmin -u root shutdown` command to shutdown the current `MySQL` server process. 
 
 
-## Continuous Optimization - use profile from C1 to build BOLTed binary
+## Continuous Optimization - use profile from C1 to build new BOLTed binary
 - We've modified `BOLT` to make it support converting `perf.data` collected from C1 to be the `perf.fdata` that `llvm-bolt` can use.
    * To enable this functionality, the `mysqld.bolt` produced from C0 must contain 
       + `BAT` (BOLT Address Translation), which is already implemented in BOLT's source code;
       + `Function Map Table`, which is added by us for performing reverse BOLT Address Translation.
+   * The code changed for BOLT to support continuous optimization can be found [here](https://github.com/upenn-acg/BOLT).
 - In C0, the `perf2bolt` and `llvm-bolt` command to add `BAT` and `Function Map Table` to the BOLTed binary is
 ```bash
 > perf2bolt -p perf_c0.data -o perf_c0.fdata mysqld
