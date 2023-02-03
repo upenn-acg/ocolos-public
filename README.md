@@ -127,8 +127,8 @@ Please refer instructions in the following webpage:\
 > perf2bolt --ignore-build-id --cont-opt --call-stack-func=callstack_func.bin -p perf_c1.data -o perf_c1.fdata mysqld_0.bolt
 > llvm-bolt mysqld -o mysqld_1.bolt --enable-bat --enable-func-map-table -data=perf_c1.fdata -reorder-blocks=cache+ -reorder-functions=hfsort
 ```      
-- We also have a script to show an example.
-   * The script shows how to use the profile collected from Ocolos' C1 + the mysqld.bolt produced from Ocolos' C0 to build a new binary
+- We also have a script to show how continuous optimization works 
+   * The script shows how to use the profile collected from Ocolos' C1 + the `mysqld.bolt` produced from Ocolos' C0 to build a new BOLTed binary
    * The script can be found [Here](https://github.com/upenn-acg/ocolos-public/blob/continuous-optimization/scripts/C1_BOLTed_performance_test.sh). 
 
 ## Miscellaneous
