@@ -94,6 +94,10 @@ Please refer instructions in the following webpage:\
    [^3]: if `nm`,`objdump` and `perf` are already in shell, it's OK that their paths are not specified in `config`. This can be checked by `which nm`, `which objdump` and `which perf`.
 - In `config`, please also specify the commands to run `MySQL server` and `sysbench`. The example commands are given in the config file. 
    * _Note_: the first argument of the command (a.k.a. the binary being invoked in the command) should be written in its full path. 
+- Please also remember to export the path of `ocolos-public`'s directory.
+```bash
+> export OCOLOS_PATH=/your/path/to/ocolos-public
+```
 - Then run the following commands:
 
 ```bash
