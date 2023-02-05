@@ -263,15 +263,15 @@ unordered_map<long, func_info> run_llvmbolt(const ocolos_env* ocolos_environ){
             new_func.moved_size = convert_str_2_long(words[5]);
             changed_functions[convert_str_2_long(words[2])] = new_func;
          }
-      }
-      else if (words[0]=="####"){
-         printf("[tracer] we've received #### !!!!!\n");
-         string file_path = ocolos_environ->dir_path+"BOLTed_bin_info.txt";
-         FILE* fp = fopen(file_path.c_str(), "w");
-         fprintf(fp, "%s\n", ocolos_environ->bolted_binary_path.c_str());
-         fprintf(fp, "%s", words[1].c_str());
-         fflush(fp);
-         fclose(fp);
+         else if (words[0]=="####"){
+            printf("[tracer] we've received #### !!!!!\n");
+            string file_path = ocolos_environ->dir_path+"BOLTed_bin_info.txt";
+            FILE* fp = fopen(file_path.c_str(), "w");
+            fprintf(fp, "%s\n", ocolos_environ->bolted_binary_path.c_str());
+            fprintf(fp, "%s", words[1].c_str());
+            fflush(fp);
+            fclose(fp);
+         }
       }
    }
 		
