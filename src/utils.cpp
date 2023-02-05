@@ -27,6 +27,8 @@ ocolos_env::ocolos_env(){
 
    ocolos_env::listen_fd            = socket(PF_INET, SOCK_STREAM, 0);
 
+   FILE* fp = fopen(ocolos_env::bolted_binary_path.c_str(), "w");
+   
 }
 
 
@@ -110,6 +112,7 @@ void ocolos_env::get_dir_path(){
    if (ocolos_env::lib_path[ocolos_env::lib_path.length()-1] !='/'){
       ocolos_env::lib_path.push_back('/');
    }
+   // TODO: if the dir path doesn't exist, create a dir path
 }
 
 
