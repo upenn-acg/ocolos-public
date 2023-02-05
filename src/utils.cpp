@@ -25,10 +25,7 @@ ocolos_env::ocolos_env(){
    
    ocolos_env::client_binary_path   = ocolos_env::get_binary_path("mysql");
 
-   ocolos_env::listen_fd            = socket(PF_INET, SOCK_STREAM, 0);
-
-   FILE* fp = fopen(ocolos_env::bolted_binary_path.c_str(), "w");
-   
+   ocolos_env::listen_fd            = socket(PF_INET, SOCK_STREAM, 0);   
 }
 
 
