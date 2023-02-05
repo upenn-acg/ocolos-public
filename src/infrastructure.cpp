@@ -179,6 +179,9 @@ void run_perf2bolt(const ocolos_env* ocolos_environ){
    static int func_exec_count = 0;
    func_exec_count++;
 
+   FILE *fp1;
+   char path1[3000];
+
    if (func_exec_count==1){
       string command = ""+ocolos_environ->perf2bolt_path+" -p "+
                        ocolos_environ->tmp_data_path+
@@ -187,7 +190,35 @@ void run_perf2bolt(const ocolos_env* ocolos_environ){
                        "perf.fdata "+ ocolos_environ->target_binary_path; 
       char* command_cstr = new char [command.length()+1];
       strcpy (command_cstr, command.c_str());
-      if (system(command_cstr)!=0) printf("[tracer] error in %s\n",__FUNCTION__);
+
+
+      fp1 = popen(command_cstr, "r");
+
+      if (fp1 == NULL){
+         printf("[tracer] fail to run perf2bolt\n" );
+         exit(-1);
+      }
+
+      while (fgets(path1, sizeof(path1), fp1) != NULL) {
+         string line(path1);
+         cout<<line;
+         vector<string> words = split_line(line);
+         if (words.size()>1){
+            if (words[0]=="####"){
+               printf("[tracer] we've received #### !!!!!\n");
+               string file_path = ocolos_environ->tmp_data_path+"BOLTed_bin_info.txt";
+               FILE* fp = fopen(file_path.c_str(), "w");
+               fprintf(fp, "%s\n", ocolos_environ->bolted_binary_path.c_str());
+               fprintf(fp, "%s\n", ocolos_environ->target_binary_path.c_str());
+               fprintf(fp, "%s", words[1].c_str());
+               fflush(fp);
+               fclose(fp);
+            }
+         }
+      }
+		
+      fclose(fp1);
+
    }
    else {
       stringstream ss;
@@ -204,7 +235,33 @@ void run_perf2bolt(const ocolos_env* ocolos_environ){
                        ocolos_environ->target_binary_path; 
       char* command_cstr = new char [command.length()+1];
       strcpy (command_cstr, command.c_str());
-      if (system(command_cstr)!=0) printf("[tracer] error in %s\n",__FUNCTION__);
+
+      fp1 = popen(command_cstr, "r");
+
+      if (fp1 == NULL){
+         printf("[tracer] fail to run perf2bolt\n" );
+         exit(-1);
+      }
+
+      while (fgets(path1, sizeof(path1), fp1) != NULL) {
+         string line(path1);
+         cout<<line;
+         vector<string> words = split_line(line);
+         if (words.size()>1){
+            if (words[0]=="####"){
+               printf("[tracer] we've received #### !!!!!\n");
+               string file_path = ocolos_environ->dir_path+"BOLTed_bin_info.txt";
+               FILE* fp = fopen(file_path.c_str(), "w");
+               fprintf(fp, "%s\n", ocolos_environ->bolted_binary_path.c_str());
+               fprintf(fp, "%s", words[1].c_str());
+               fflush(fp);
+               fclose(fp);
+            }
+         }
+      }
+		
+      fclose(fp1);
+
 
    }
    #ifdef TIME_MEASUREMENT
@@ -262,15 +319,6 @@ unordered_map<long, func_info> run_llvmbolt(const ocolos_env* ocolos_environ){
             new_func.original_size = convert_str_2_long(words[4]);
             new_func.moved_size = convert_str_2_long(words[5]);
             changed_functions[convert_str_2_long(words[2])] = new_func;
-         }
-         else if (words[0]=="####"){
-            printf("[tracer] we've received #### !!!!!\n");
-            string file_path = ocolos_environ->dir_path+"BOLTed_bin_info.txt";
-            FILE* fp = fopen(file_path.c_str(), "w");
-            fprintf(fp, "%s\n", ocolos_environ->bolted_binary_path.c_str());
-            fprintf(fp, "%s", words[1].c_str());
-            fflush(fp);
-            fclose(fp);
          }
       }
    }
