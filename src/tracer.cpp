@@ -150,7 +150,7 @@ int main(){
       #endif
 
       /*--------- run cont optimization ---------*/
-//      run_perf_record(target_pid, &ocolos_environ);
+      run_perf_record(target_pid, &ocolos_environ);
    }
 }
 
