@@ -25,15 +25,34 @@ ocolos_env::ocolos_env(){
    
    ocolos_env::client_binary_path   = ocolos_env::get_binary_path("mysql");
 
-   ocolos_env::listen_fd            = socket(PF_INET, SOCK_STREAM, 0);
-
+   ocolos_env::listen_fd            = socket(PF_INET, SOCK_STREAM, 0);   
 }
 
 
 
 
 void ocolos_env::read_config(){
-   FILE* config = fopen("config","r");
+   const char* dir_path = std::getenv("OCOLOS_PATH");
+   if (!dir_path){
+      printf("[tracer][error] please specify environment variable OCOLOS_PATH\n");
+      exit(-1);
+   }
+
+   string dir_path_str(dir_path); 
+   if (dir_path_str[dir_path_str.size()-1] != '/')
+      dir_path_str.push_back('/');
+   ocolos_env::dir_path = dir_path_str;
+
+   string config_s = dir_path_str + "config";
+   char* config_cstr = new char[config_s.length()+1];
+   strcpy(config_cstr, config_s.c_str()); 
+
+   FILE* config = fopen(config_cstr,"r");
+   if (config==NULL){
+      printf("%s\n", config_cstr);
+      printf("[tracer][error] please place the config file in the same directory with tracer\n ");
+      exit(-1);
+   }
    char line[4096];
    while (fgets (line , 4096 , config) != NULL){
       string current_line(line);
@@ -82,16 +101,6 @@ string ocolos_env::get_binary_path(string bin_name){
 
 
 void ocolos_env::get_dir_path(){
-   char dir_path[1024];
-   if(getcwd(dir_path,1024)==NULL) {
-      printf("[tracer][error] error in getting the path of the current dir\n");
-      exit(-1);
-   }
-   string dir_path_str(dir_path); 
-   if (dir_path_str[dir_path_str.size()-1] != '/')
-      dir_path_str.push_back('/');
-   ocolos_env::dir_path = dir_path_str;
-
    ocolos_env::tmp_data_path = ocolos_env::get_binary_path("tmp_data_dir");
    if (ocolos_env::tmp_data_path[ocolos_env::tmp_data_path.length()-1] !='/'){
       ocolos_env::tmp_data_path.push_back('/');
@@ -100,6 +109,7 @@ void ocolos_env::get_dir_path(){
    if (ocolos_env::lib_path[ocolos_env::lib_path.length()-1] !='/'){
       ocolos_env::lib_path.push_back('/');
    }
+   // TODO: if the dir path doesn't exist, create a dir path
 }
 
 

@@ -141,6 +141,17 @@ unordered_map<long, func_info> get_func_in_call_stack(vector<unw_word_t> call_st
 
 
 
+/*
+ * Store the starting address of functions that are on the call stack
+ * into a binary file. 
+ * This information is useful for when perf2bolt works on the profile 
+ * collected from C_x round. It will be read by perf2bolt in the next 
+ * round of code layout optimization 
+ */
+void write_func_on_call_stack_into_file(const ocolos_env* ocolos_environment,
+                                        unordered_map<long, func_info> func_in_call_stack);
+
+
 
 /*
  * Get the functions that are not moved by BOLT, nor are they on

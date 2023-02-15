@@ -140,13 +140,29 @@ void send_data_path(const ocolos_env* ocolos_environ){
 
 
 void run_perf_record(int target_pid, const ocolos_env* ocolos_environ){
-   string command = ocolos_environ->perf_path+
-                    " record -e cycles:u -j any,u -a -o "+
-                    ocolos_environ->tmp_data_path+ 
-                    "perf.data -p "+
-                    to_string(target_pid)+
-                    " -- sleep 60";
+   static int func_exec_count = 0;
+   func_exec_count++;
+   string command;
+   if (func_exec_count==1){
+      command = ocolos_environ->perf_path+
+                       " record -e cycles:u -j any,u -a -o "+
+                       ocolos_environ->tmp_data_path+ 
+                       "perf.data -p "+
+                       to_string(target_pid)+
+                       " -- sleep 60";
+   }
+   else{
+      stringstream ss;
+      ss << func_exec_count;
+      string f_exec_count = ss.str();
+      command = ocolos_environ->perf_path+
+                       " record -e cycles:u -j any,u -a -o "+
+                       ocolos_environ->tmp_data_path+ 
+                       "perf"+f_exec_count+".data -p "+
+                       to_string(target_pid)+
+                       " -- sleep 60";
 
+   }
    char * command_cstr = new char [command.length()+1];
    strcpy (command_cstr, command.c_str());
    if (system(command_cstr)!=0) printf("[tracer] error in %s\n",__FUNCTION__);
@@ -160,15 +176,94 @@ void run_perf2bolt(const ocolos_env* ocolos_environ){
    auto begin = std::chrono::high_resolution_clock::now();
    #endif
 
-   string command = ""+ocolos_environ->perf2bolt_path+" -p "+
-                    ocolos_environ->tmp_data_path+
-                    "perf.data -o "+
-                    ocolos_environ->tmp_data_path+
-                    "perf.fdata "+ ocolos_environ->target_binary_path; 
-   char* command_cstr = new char [command.length()+1];
-   strcpy (command_cstr, command.c_str());
-   if (system(command_cstr)!=0) printf("[tracer] error in %s\n",__FUNCTION__);
+   static int func_exec_count = 0;
+   func_exec_count++;
 
+   FILE *fp1;
+   char path1[3000];
+
+   if (func_exec_count==1){
+      string command = ""+ocolos_environ->perf2bolt_path+" -p "+
+                       ocolos_environ->tmp_data_path+
+                       "perf.data -o "+
+                       ocolos_environ->tmp_data_path+
+                       "perf.fdata "+ ocolos_environ->target_binary_path; 
+      char* command_cstr = new char [command.length()+1];
+      strcpy (command_cstr, command.c_str());
+
+
+      fp1 = popen(command_cstr, "r");
+
+      if (fp1 == NULL){
+         printf("[tracer] fail to run perf2bolt\n" );
+         exit(-1);
+      }
+
+      while (fgets(path1, sizeof(path1), fp1) != NULL) {
+         string line(path1);
+         cout<<line;
+         vector<string> words = split_line(line);
+         if (words.size()>1){
+            if (words[0]=="####"){
+               printf("[tracer] we've received #### !!!!!\n");
+               string file_path = ocolos_environ->tmp_data_path+"BOLTed_bin_info.txt";
+               FILE* fp = fopen(file_path.c_str(), "w");
+               fprintf(fp, "%s\n", ocolos_environ->bolted_binary_path.c_str());
+               fprintf(fp, "%s\n", ocolos_environ->target_binary_path.c_str());
+               fprintf(fp, "%s", words[1].c_str());
+               fflush(fp);
+               fclose(fp);
+            }
+         }
+      }
+		
+      fclose(fp1);
+
+   }
+   else {
+      stringstream ss;
+      ss << func_exec_count;
+      string f_exec_count = ss.str();
+
+      string command = ""+ocolos_environ->perf2bolt_path+
+                       " --ignore-build-id --cont-opt"+
+                       " -p "+
+                       ocolos_environ->tmp_data_path+
+                       "perf"+f_exec_count+".data -o "+
+                       ocolos_environ->tmp_data_path+
+                       "perf"+f_exec_count+".fdata "+ 
+                       ocolos_environ->target_binary_path; 
+      char* command_cstr = new char [command.length()+1];
+      strcpy (command_cstr, command.c_str());
+
+      fp1 = popen(command_cstr, "r");
+
+      if (fp1 == NULL){
+         printf("[tracer] fail to run perf2bolt\n" );
+         exit(-1);
+      }
+
+      while (fgets(path1, sizeof(path1), fp1) != NULL) {
+         string line(path1);
+         cout<<line;
+         vector<string> words = split_line(line);
+         if (words.size()>1){
+            if (words[0]=="####"){
+               printf("[tracer] we've received #### !!!!!\n");
+               string file_path = ocolos_environ->dir_path+"BOLTed_bin_info.txt";
+               FILE* fp = fopen(file_path.c_str(), "w");
+               fprintf(fp, "%s\n", ocolos_environ->bolted_binary_path.c_str());
+               fprintf(fp, "%s", words[1].c_str());
+               fflush(fp);
+               fclose(fp);
+            }
+         }
+      }
+		
+      fclose(fp1);
+
+
+   }
    #ifdef TIME_MEASUREMENT
    auto end = std::chrono::high_resolution_clock::now();
    auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
@@ -192,6 +287,8 @@ unordered_map<long, func_info> run_llvmbolt(const ocolos_env* ocolos_environ){
                     ocolos_environ->tmp_data_path+
                     "perf.fdata -o " +
                     ocolos_environ->bolted_binary_path + 
+                    " --enable-bat --enable-ocolos"+
+                    " --enable-func-map-table "+
                     " -reorder-blocks=cache+ "+
                     "-reorder-functions=hfsort "+
                     "-split-functions=0 "+
@@ -375,6 +472,25 @@ unordered_map<long, func_info> get_func_in_call_stack(vector<unw_word_t> call_st
 }
 
 
+void write_func_on_call_stack_into_file(const ocolos_env* ocolos_environment, 
+                                        unordered_map<long, func_info> func_in_call_stack){
+  string snapshot_path = ocolos_environment->tmp_data_path + "callstack_func.bin";
+  FILE* fp = fopen(snapshot_path.c_str(), "w");
+
+  long callstack_func_number = func_in_call_stack.size();
+  fwrite(&callstack_func_number, sizeof(long), 1, fp);
+
+  uint64_t buffer[func_in_call_stack.size()];
+  int i = 0; 
+  for (auto it = func_in_call_stack.begin(); it != func_in_call_stack.end(); it++){
+     buffer[i] = (uint64_t)it->first;
+     i++;
+  }
+  fwrite(buffer, sizeof(uint64_t), callstack_func_number, fp);
+
+  fflush(fp);
+  fclose(fp);
+}
 
 
 unordered_map<long, func_info> get_unmoved_func_not_in_call_stack(unordered_map<long, func_info>func_in_call_stack, 

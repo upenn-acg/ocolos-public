@@ -58,6 +58,7 @@ vector<unw_word_t> unwind_call_stack(vector<pid_t> tids){
       as = unw_create_addr_space(&_UPT_accessors, 0);
       if (!as) panic("unw_create_addr_space failed");
 
+      cout<<tids[i]<<endl;
       ui = (struct UPT_info*) _UPT_create(tids[i]);
       if (!ui) panic("_UPT_create failed");
       int rc = unw_init_remote(&c, as, ui);
@@ -71,6 +72,7 @@ vector<unw_word_t> unwind_call_stack(vector<pid_t> tids){
          } else {
             panic("unw_init_remote: UNKNOWN");
          }
+         exit(-1);
       }
 
       do {
