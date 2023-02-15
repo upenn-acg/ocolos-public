@@ -17,7 +17,6 @@ Please refer instructions from links or directly run commands listed below to in
 ## Download ocolos for mysql
 ```bash
 > git clone git@github.com:upenn-acg/ocolos-public.git
-> git checkout continuous-optimization
 ```
 
 
