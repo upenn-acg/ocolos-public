@@ -11,11 +11,11 @@ mysqladmin -u root shutdown
 $OCOLOS_PATH/tracer
 # produce the second mysqld.bolt binary
 mysqladmin -u root shutdown
-$BOLT_PATH/bin/perf2bolt --ignore-build-id --cont-opt --call-stack-func=$OCOLOS_DATA_PATH/callstack_func.bin -p $OCOLOS_DATA_PATH/perf2.data -o perf2.fdata $OCOLOS_DATA_PATH/mysqld.bolt 
+cmd="$BOLT_PATH/bin/perf2bolt --ignore-build-id --cont-opt --call-stack-func=$OCOLOS_DATA_PATH/callstack_func.bin --bin-path-info=$OCOLOS_DATA_PATH/BOLTed_bin_info.txt -p $OCOLOS_DATA_PATH/perf2.data -o perf2.fdata $OCOLOS_DATA_PATH/mysqld.bolt"
+$cmd 
 $BOLT_PATH/bin/llvm-bolt $MYSQL_BASE_PATH/bin/mysqld -o mysqld.bolt --enable-bat --enable-func-map-table -data=perf2.fdata -reorder-blocks=cache+ -reorder-functions=hfsort 
 mv mysqld.bolt $MYSQL_BASE_PATH/bin
 $MYSQL_BASE_PATH/bin/mysqld.bolt --user=ocolos --port=3306 --basedir=$MYSQL_BASE_PATH --datadir=$MYSQL_BASE_PATH/data --plugin-dir=$MYSQL_BASE_PATH/lib/plugin --log-error=ocolos.err --pid-file=ocolos.pid &
 PID=$!
 sleep 15
-echo "@@@ start to test the performance of the first mysqld.bolt"
 $run_benchmark_cmd
