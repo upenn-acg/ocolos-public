@@ -140,6 +140,7 @@ Please refer instructions in the following webpage:\
       + shows how to use the profile collected from Ocolos' C1 + the `mysqld.bolt` produced from Ocolos' C0 to build a newly BOLTed binary
       + runs the newly BOLTed binary with `oltp_read_only` to show the throughput
    * The script can be found [Here](https://github.com/upenn-acg/ocolos-public/blob/main/scripts/C1_BOLTed_performance_test.sh). 
+      + the command to run this script is `sh ./scripts/C1_BOLTed_performance_test.sh`
 
 ## Miscellaneous
 In `src/utils.hpp`,
