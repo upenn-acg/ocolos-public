@@ -132,7 +132,7 @@ Please refer instructions in the following webpage:\
 ```      
 - We also have a script to show how continuous optimization works 
    * The script shows how to use the profile collected from Ocolos' C1 + the `mysqld.bolt` produced from Ocolos' C0 to build a new BOLTed binary
-   * The script can be found [Here](https://github.com/upenn-acg/ocolos-public/blob/continuous-optimization/scripts/C1_BOLTed_performance_test.sh). 
+   * The script can be found [Here](https://github.com/upenn-acg/ocolos-public/blob/main/scripts/C1_BOLTed_performance_test.sh). 
 
 ## Miscellaneous
 In `src/utils.hpp`,
