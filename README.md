@@ -117,9 +117,9 @@ Please refer instructions in the following webpage:\
 - We've modified `BOLT` to make it support converting `perf.data` collected from C1 to be the `perf.fdata` that `llvm-bolt` can use.
    * To enable this functionality, the `mysqld.bolt` produced from C0 must contain 
       + `BAT` (BOLT Address Translation), which is already implemented in BOLT's source code;
-      + `Function Map Table`, which is added by us for performing reverse BOLT Address Translation.
-   * The code changed for BOLT to support continuous optimization can be found [here](https://github.com/upenn-acg/BOLT).
-- In C0, the `perf2bolt` and `llvm-bolt` command to add `BAT` and `Function Map Table` to the BOLTed binary is
+      + `Function Map Table`, which is added by us for performing reversed BOLT Address Translation.
+   * The `BOLT`'s code being changed to support continuous optimization can be found [here](https://github.com/upenn-acg/BOLT).
+- In C0, the `perf2bolt` and `llvm-bolt` command to add `BAT` and `Function Map Table` into the BOLTed binary is
 ```bash
 > perf2bolt -p perf_c0.data -o perf_c0.fdata mysqld
 > llvm-bolt mysqld -o mysqld_c0.bolt --enable-bat --enable-func-map-table -data=perf_c0.fdata -reorder-blocks=cache+ -reorder-functions=hfsort
@@ -135,7 +135,7 @@ Please refer instructions in the following webpage:\
       + shows how to use the profile collected from Ocolos' C1 + the `mysqld.bolt` produced from Ocolos' C0 to build a newly BOLTed binary
       + runs the newly BOLTed binary with `oltp_read_only` to show the throughput
    * The script can be found [Here](https://github.com/upenn-acg/ocolos-public/blob/main/scripts/C1_BOLTed_performance_test.sh). 
-      + the command to run this script is `sh ./scripts/C1_BOLTed_performance_test.sh`
+      + the command to run this script is `sh scripts/C1_BOLTed_performance_test.sh`
 
 ## Miscellaneous
 In `src/utils.hpp`,
