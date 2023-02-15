@@ -125,12 +125,7 @@ Please refer instructions in the following webpage:\
 > llvm-bolt mysqld -o mysqld_c0.bolt --enable-bat --enable-func-map-table -data=perf_c0.fdata -reorder-blocks=cache+ -reorder-functions=hfsort
 ```
 - In C1, to make profile collected from C1 work with `perf2bolt`, and then to produce C1's `mysqld.bolt`, the `perf2bolt` and `llvm-bolt` command is changed to be the following commands
-   * In the `perf2bolt` command, `callstack_func.bin` is produced by `Ocolos` during C0's code replacement. It contains a snapshot of functions on the call stack when the target process is paused.
-   * In the `perf2bolt` command, `BOLTed_bin_info.txt` is also produced by `Ocolos` during C0's code replacement. It contains 
-      + the information of the paths of the original `mysqld` binary 
-      + the path of the `mysqld_0.bolt`
-      + the starting address of BOLTed text section in the `mysqld_0.bolt`
-      + the offset of BOLTed text section in the `mysqld_0.bolt`
+   * In the `perf2bolt` command, `callstack_func.bin` & `BOLTed_bin_info.txt` are produced by `Ocolos` during C0's code replacement, since we need to pass some essential information from `Ocolos` to `BOLT`
 ```bash
 > perf2bolt --ignore-build-id --cont-opt --call-stack-func=callstack_func.bin --bin-path-info=BOLTed_bin_info.txt -p perf_c1.data -o perf_c1.fdata mysqld_c0.bolt
 > llvm-bolt mysqld -o mysqld_c1.bolt --enable-bat --enable-func-map-table -data=perf_c1.fdata -reorder-blocks=cache+ -reorder-functions=hfsort
