@@ -41,12 +41,12 @@ Please follow the commands below to install `BOLT`
 ```
 In `CMakeList.txt`, at line 580, please add [^2]: 
 [^2]: If the mysqld binary compiled by gcc generates `callq` instructions rather than `call` instructions, please refer to the solution discussed in [this page](https://github.com/upenn-acg/ocolos-public/issues/1).
-
-`STRING_APPEND(CMAKE_C_FLAGS  " -fno-jump-tables")` \
-`STRING_APPEND(CMAKE_CXX_FLAGS " -fno-jump-tables")` \
-`STRING_APPEND(CMAKE_C_FLAGS " -no-pie")` \
-`STRING_APPEND(CMAKE_CXX_FLAGS " -no-pie")`
-
+```
+STRING_APPEND(CMAKE_C_FLAGS  " -fno-jump-tables")
+STRING_APPEND(CMAKE_CXX_FLAGS " -fno-jump-tables")
+STRING_APPEND(CMAKE_C_FLAGS " -no-pie")
+STRING_APPEND(CMAKE_CXX_FLAGS " -no-pie")
+```
 Also, in `CMakeList.txt`, turn off `ld.gold` linker: \
 change `OPTION(USE_LD_GOLD "Use GNU gold linker" ON)` to be `OPTION(USE_LD_GOLD "Use GNU gold linker" OFF)`
 
