@@ -122,7 +122,7 @@ Please refer instructions in the following webpage:\
 - In C0, the `perf2bolt` and `llvm-bolt` command to add `BAT` and `Function Map Table` to the BOLTed binary is
 ```bash
 > perf2bolt -p perf_c0.data -o perf_c0.fdata mysqld
-> llvm-bolt mysqld -o mysqld_0.bolt --enable-bat --enable-func-map-table -data=perf_c0.fdata -reorder-blocks=cache+ -reorder-functions=hfsort
+> llvm-bolt mysqld -o mysqld_c0.bolt --enable-bat --enable-func-map-table -data=perf_c0.fdata -reorder-blocks=cache+ -reorder-functions=hfsort
 ```
 - In C1, to make profile collected from C1 work with `perf2bolt`, and then to produce C1's `mysqld.bolt`, the `perf2bolt` and `llvm-bolt` command is changed to be the following commands
    * In the `perf2bolt` command, `callstack_func.bin` is produced by `Ocolos` during C0's code replacement. It contains a snapshot of functions on the call stack when the target process is paused.
@@ -132,11 +132,13 @@ Please refer instructions in the following webpage:\
       + the starting address of BOLTed text section in the `mysqld_0.bolt`
       + the offset of BOLTed text section in the `mysqld_0.bolt`
 ```bash
-> perf2bolt --ignore-build-id --cont-opt --call-stack-func=callstack_func.bin --bin-path-info=BOLTed_bin_info.txt -p perf_c1.data -o perf_c1.fdata mysqld_0.bolt
-> llvm-bolt mysqld -o mysqld_1.bolt --enable-bat --enable-func-map-table -data=perf_c1.fdata -reorder-blocks=cache+ -reorder-functions=hfsort
+> perf2bolt --ignore-build-id --cont-opt --call-stack-func=callstack_func.bin --bin-path-info=BOLTed_bin_info.txt -p perf_c1.data -o perf_c1.fdata mysqld_c0.bolt
+> llvm-bolt mysqld -o mysqld_c1.bolt --enable-bat --enable-func-map-table -data=perf_c1.fdata -reorder-blocks=cache+ -reorder-functions=hfsort
 ```      
 - We also have a script to show how continuous optimization works 
-   * The script shows how to use the profile collected from Ocolos' C1 + the `mysqld.bolt` produced from Ocolos' C0 to build a new BOLTed binary
+   * The script does the following things:
+      + shows how to use the profile collected from Ocolos' C1 + the `mysqld.bolt` produced from Ocolos' C0 to build a newly BOLTed binary
+      + runs the newly BOLTed binary with `oltp_read_only` to show the throughput
    * The script can be found [Here](https://github.com/upenn-acg/ocolos-public/blob/main/scripts/C1_BOLTed_performance_test.sh). 
 
 ## Miscellaneous
