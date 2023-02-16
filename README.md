@@ -85,7 +85,7 @@ _Note_:
 > sudo apt-get update 
 > sudo apt-get install sysbench
 ```
-Please refer instructions in the following webpage:\
+Or if you prefer to build sysbench from source, please refer instructions in the following webpage:\
 [https://github.com/akopytov/sysbench](https://github.com/akopytov/sysbench) 
 
 
