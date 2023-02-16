@@ -199,6 +199,8 @@ void run_perf2bolt(const ocolos_env* ocolos_environ){
          exit(-1);
       }
 
+      vector<string> BOLTed_addr;
+      bool has_sharp = false;
       while (fgets(path1, sizeof(path1), fp1) != NULL) {
          string line(path1);
          cout<<line;
@@ -206,15 +208,23 @@ void run_perf2bolt(const ocolos_env* ocolos_environ){
          if (words.size()>1){
             if (words[0]=="####"){
                printf("[tracer] we've received #### !!!!!\n");
-               string file_path = ocolos_environ->tmp_data_path+"BOLTed_bin_info.txt";
-               FILE* fp = fopen(file_path.c_str(), "w");
-               fprintf(fp, "%s\n", ocolos_environ->bolted_binary_path.c_str());
-               fprintf(fp, "%s\n", ocolos_environ->target_binary_path.c_str());
-               fprintf(fp, "%s", words[1].c_str());
-               fflush(fp);
-               fclose(fp);
+               has_sharp = true;
+               BOLTed_addr.push_back(words[1]);
             }
          }
+      }
+
+      if (has_sharp){
+         string file_path = ocolos_environ->tmp_data_path+"BOLTed_bin_info.txt";
+         FILE* fp = fopen(file_path.c_str(), "w");
+         fprintf(fp, "%s\n", ocolos_environ->bolted_binary_path.c_str());
+         fprintf(fp, "%s\n", ocolos_environ->target_binary_path.c_str());
+         for (unsigned i=0; i<BOLTed_addr.size(); i++){
+            fprintf(fp, "%s\n", BOLTed_addr[i].c_str());
+         }
+         fflush(fp);
+         fclose(fp);
+        
       }
 		
       fclose(fp1);
