@@ -118,9 +118,9 @@ Or if you prefer to build sysbench from source, please refer instructions in the
 
 ## UPDATES: Continuous Optimization - use profile from C1 to build new BOLTed binary
 - We've modified `BOLT` to make it support converting `perf.data` collected from C1 to be the `perf.fdata` that `llvm-bolt` can use.
-   * To enable this functionality, the `mysqld.bolt` produced from C0 must contain 
-      + `BAT` (BOLT Address Translation), which is already implemented in BOLT's source code;
-      + `Function Map Table`, which is added by us for performing reversed BOLT Address Translation.
+   * Here, we have the new terms `C0` & `C1`
+      + `C0` : The duration before `Ocolos`'s code replacement 
+      + `C1` : The duration after `Ocolos`''s code replacement 
    * The `BOLT`'s code being changed to support continuous optimization can be found [here](https://github.com/upenn-acg/BOLT).
 - In C0, the `perf2bolt` and `llvm-bolt` command to add `BAT` and `Function Map Table` into the BOLTed binary is
 ```bash
