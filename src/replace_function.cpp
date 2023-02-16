@@ -1,6 +1,33 @@
 #include "replace_function.hpp"
 #define DEBUG_INFO
 
+
+
+
+int __libc_start_main(void *orig_main,int argc,char* argv[],
+  void (*init_func)(void),
+  void (*fini_func)(void),
+  void (*rtld_fini_func)(void), 
+  void *stack_end){
+  typedef void (*fnptr_type)(void); 
+  typedef int (*orig_func_type)(void *, int, char *[], fnptr_type,fnptr_type, fnptr_type, void*);
+  orig_func_type orig_func;
+  int ret = 0;
+  orig_func = (orig_func_type) dlsym(RTLD_NEXT, "__libc_start_main");
+  sbrk(0x8000000); // works to shift the first allocation
+  
+  ret = orig_func(orig_main,argc,argv,
+                  (fnptr_type)init_func,
+                  (fnptr_type)fini_func,
+                  rtld_fini_func,
+                  stack_end); 
+  return ret;
+}                                                                 
+
+
+
+
+
 void ocolos_env::get_dir_path(string data_path){
    ocolos_env::tmp_data_path        = data_path;
 

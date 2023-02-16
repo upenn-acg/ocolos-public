@@ -151,3 +151,15 @@ void print_err_and_exit(FILE* recordFile, string func, long addr, long len, long
  */
 void record_machine_code(FILE* recordFile, uint8_t* machine_code, unsigned int len);
 
+
+
+
+
+/*
+ * change __libc_start_main to move the location of the heap
+ */
+extern "C" int __libc_start_main(void *orig_main, int argc, char* argv[],
+  void (*init_func)(void),
+  void (*fini_func)(void),
+  void (*rtld_fini_func)(void),
+  void *stack_end);
