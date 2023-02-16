@@ -121,7 +121,7 @@ Or if you prefer to build sysbench from source, please refer instructions in the
    * Here, we have the new terms `C0` & `C1`
       + `C0` : The duration before `Ocolos`'s code replacement 
       + `C1` : The duration after `Ocolos`'s code replacement 
-   * The `BOLT`'s code being changed to support continuous optimization can be found [here](https://github.com/upenn-acg/BOLT).
+   * The `BOLT`'s code supports continuous optimization can be found [here](https://github.com/upenn-acg/BOLT).
 - In `C0`, the `perf2bolt` and `llvm-bolt` commands are changed to :
 ```bash
 > perf2bolt -p perf_c0.data -o perf_c0.fdata mysqld
@@ -138,6 +138,7 @@ Or if you prefer to build sysbench from source, please refer instructions in the
       + shows how to use the profile collected from Ocolos' C1 + the `mysqld.bolt` produced from Ocolos' C0 to build a newly BOLTed binary
       + runs the newly BOLTed binary with `oltp_read_only` to show the throughput
    * The script can be found [Here](https://github.com/upenn-acg/ocolos-public/blob/main/scripts/C1_BOLTed_performance_test.sh). 
+      + before running the script, please change the paths in the script.
       + the command to run this script is `sh scripts/C1_BOLTed_performance_test.sh`
 
 ## Miscellaneous
