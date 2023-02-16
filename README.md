@@ -120,9 +120,9 @@ Or if you prefer to build sysbench from source, please refer instructions in the
 - We've modified `BOLT` to make it support converting `perf.data` collected from C1 to be the `perf.fdata` that `llvm-bolt` can use.
    * Here, we have the new terms `C0` & `C1`
       + `C0` : The duration before `Ocolos`'s code replacement 
-      + `C1` : The duration after `Ocolos`''s code replacement 
+      + `C1` : The duration after `Ocolos`'s code replacement 
    * The `BOLT`'s code being changed to support continuous optimization can be found [here](https://github.com/upenn-acg/BOLT).
-- In C0, the `perf2bolt` and `llvm-bolt` command to add `BAT` and `Function Map Table` into the BOLTed binary is
+- In C0, the `perf2bolt` and `llvm-bolt` command will be changed to
 ```bash
 > perf2bolt -p perf_c0.data -o perf_c0.fdata mysqld
 > llvm-bolt mysqld -o mysqld_c0.bolt --enable-bat --enable-func-map-table -data=perf_c0.fdata -reorder-blocks=cache+ -reorder-functions=hfsort
