@@ -81,6 +81,10 @@ _Note_:
 
 
 ## Build Sysbench 
+```bash
+> sudo apt-get update 
+> sudo apt-get install sysbench
+```
 Please refer instructions in the following webpage:\
 [https://github.com/akopytov/sysbench](https://github.com/akopytov/sysbench) 
 
