@@ -122,12 +122,12 @@ Or if you prefer to build sysbench from source, please refer instructions in the
       + `C0` : The duration before `Ocolos`'s code replacement 
       + `C1` : The duration after `Ocolos`'s code replacement 
    * The `BOLT`'s code being changed to support continuous optimization can be found [here](https://github.com/upenn-acg/BOLT).
-- In `C0`, the `perf2bolt` and `llvm-bolt` command will be changed to :
+- In `C0`, the `perf2bolt` and `llvm-bolt` commands are changed to :
 ```bash
 > perf2bolt -p perf_c0.data -o perf_c0.fdata mysqld
 > llvm-bolt mysqld -o mysqld_c0.bolt --enable-bat --enable-func-map-table -data=perf_c0.fdata -reorder-blocks=cache+ -reorder-functions=hfsort
 ```
-- In `C1`, to make profile collected from `C1` work with `perf2bolt`, and then to produce C1's `mysqld.bolt` for next round of code replacement, the `perf2bolt` and `llvm-bolt` command is changed to :
+- In `C1`, to make profile collected from `C1` work with `perf2bolt`, and then to produce C1's `mysqld.bolt` for next round of code replacement, the `perf2bolt` and `llvm-bolt` commands are changed to :
    * In the `perf2bolt` command, `callstack_func.bin` & `BOLTed_bin_info.txt` are produced by `Ocolos` during C0's code replacement, since we need to pass some essential information from `Ocolos` to `BOLT`
 ```bash
 > perf2bolt --ignore-build-id --cont-opt --call-stack-func=callstack_func.bin --bin-path-info=BOLTed_bin_info.txt -p perf_c1.data -o perf_c1.fdata mysqld_c0.bolt
