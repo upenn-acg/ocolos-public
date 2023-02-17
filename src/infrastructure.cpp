@@ -468,11 +468,14 @@ unordered_map<long, func_info> get_func_in_call_stack(vector<unw_word_t> call_st
                                                       map<long, func_info> unmoved_func_heap)
 {
    unordered_map<long, func_info> func_in_call_stack;
+
    for (unsigned i = 0; i < call_stack_ips.size(); i++){
       auto it_low = unmoved_func_heap.lower_bound(call_stack_ips[i]);
       if (it_low!=unmoved_func_heap.end()){
          auto it = prev(it_low);
-         func_in_call_stack[it->first] = it-> second;
+         if (it!=unmoved_func_heap.end()){
+           func_in_call_stack[it->first] = it-> second;
+         }
       }
    }
    #ifdef MEASUREMENT
