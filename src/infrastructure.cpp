@@ -207,7 +207,6 @@ void run_perf2bolt(const ocolos_env* ocolos_environ){
          vector<string> words = split_line(line);
          if (words.size()>1){
             if (words[0]=="####"){
-               printf("[tracer] we've received #### !!!!!\n");
                has_sharp = true;
                BOLTed_addr.push_back(words[1]);
             }
