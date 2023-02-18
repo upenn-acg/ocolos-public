@@ -155,6 +155,12 @@ In `Makefile`'s `CXXFLAGS`,
   * `-DDEBUG_INFO` can also be defined in `src/replace_function.hpp`. In this way, the ld_preload library will store all machine code per function it inserted to the target process as a `uint8_t` format array into a file. The file can be found in the `tmp_data_path` you defined in the config file. 
 - if `-DDEBUG` flag is added, after code replacement, Ocolos will first send `SIGSTOP` signal to target process and then resume the target process by `PTRACE_DETACH`. In this way, it allows debugging tools such as `GDB` to attach to the target process and observe what goes wrong after code replacement.
 
-
+If the code replacement got a failure, you can do the following things
+- first add the `-DDEBUG_INFO` into `CXXFLAGS` and compile again.
+- then run `./tracer` 
+- after `tracer` run into an error, you can check `{tmp_data_dir}/machine_code.txt`'s last few lines
+- if the last few lines shows that the error is caused by `mmap failed. file exists.`
+   + it indicates that the BOLTed text section overlap with the heap of the running process. 
+   + to solve this problem, please comment out [this line](https://github.com/upenn-acg/ocolos-public/blob/main/src/replace_function.cpp#L232) in `replace_function.cpp`, and then compile the program again.
 
 
