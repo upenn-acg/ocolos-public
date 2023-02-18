@@ -1,6 +1,6 @@
 CPP=g++
 CC=clang++
-CPPFLAGS=-I/usr/local/include -g -Wall -O3
+CPPFLAGS=-I/usr/local/include -g -Wall -O3 -DDEBUG_INFO -DTIME_MEASUREMENT
 LINKER_FLAGS=-L/usr/local/lib -lpthread -ldl
 LIBUNWIND_FLAGS=-lunwind -lunwind-ptrace -lunwind-generic
 BOOST_FLAGS=-lboost_serialization
