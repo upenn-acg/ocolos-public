@@ -142,7 +142,7 @@ Or if you prefer to build sysbench from source, please refer instructions in the
       + also, please add `-DCONT_OPT` to `CXXFLAGS` in Makefile, and compile `Ocolos` again. 
       + run this script `sh scripts/C1_BOLTed_performance_test.sh`
 
-## Miscellaneous
+## Miscellaneous (notes about how to debug Ocolos)
 In `Makefile`'s `CXXFLAGS`,
 - if `-DTIME_MEASUREMENT` flag is added, Ocolos will print the execution time of code replacement;
 - if `-DMEASUREMENT` flag is added, Ocolos will print metrics such as:  
