@@ -139,7 +139,8 @@ Or if you prefer to build sysbench from source, please refer instructions in the
       + runs the newly BOLTed binary with `oltp_read_only` to show the throughput
    * The script can be found [Here](https://github.com/upenn-acg/ocolos-public/blob/main/scripts/C1_BOLTed_performance_test.sh). 
       + before running the script, please change the paths in the script.
-      + the command to run this script is `sh scripts/C1_BOLTed_performance_test.sh`
+      + also, please add new `-DCONT_OPT` to `CXXFLAGS` in Makefile, and compile `Ocolos` again. 
+      + run this script `sh scripts/C1_BOLTed_performance_test.sh`
 
 ## Miscellaneous
 In `src/utils.hpp`,
