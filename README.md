@@ -139,21 +139,21 @@ Or if you prefer to build sysbench from source, please refer instructions in the
       + runs the newly BOLTed binary with `oltp_read_only` to show the throughput
    * The script can be found [Here](https://github.com/upenn-acg/ocolos-public/blob/main/scripts/C1_BOLTed_performance_test.sh). 
       + before running the script, please change the paths in the script.
-      + also, please add new `-DCONT_OPT` to `CXXFLAGS` in Makefile, and compile `Ocolos` again. 
+      + also, please add `-DCONT_OPT` to `CXXFLAGS` in Makefile, and compile `Ocolos` again. 
       + run this script `sh scripts/C1_BOLTed_performance_test.sh`
 
 ## Miscellaneous
-In `src/utils.hpp`,
-- if `TIME_MEASUREMENT` is defined, Ocolos will print the execution time of code replacement;
-- if `MEASUREMENT` is defined, Ocolos will print metrics such as:  
+In `Makefile`'s `CXXFLAGS`,
+- if `-DTIME_MEASUREMENT` flag is added, Ocolos will print the execution time of code replacement;
+- if `-DMEASUREMENT` flag is added, Ocolos will print metrics such as:  
   * the number of functions on the call stack when target process is paused,
   * the number of functions that are moved by `BOLT`,
   * the number of functions that are in the `BOLT` and original functions.
-- if `DEBUG_INFO` is defined, Ocolos will print debug information such as:
+- if `-DDEBUG_INFO` flag is added, Ocolos will print debug information such as:
   * the information about detailed behavior of tracer
   * the content in the call stack when the target process is paused
-  * `DEBUG_INFO` can also be defined in `src/replace_function.hpp`. In this way, the ld_preload library can store all machine code per function it inserted to the target process as a `uint8_t` format array into a file. The file can be found in the `tmp_data_path` you defined in the config file. 
-- if `DEBUG` is defined, after code replacement, Ocolos will first send `SIGSTOP` signal to target process and then resume the target process by `PTRACE_DETACH`. In this way, it allows debugging tools such as `GDB` to attach to the target process and observe what goes wrong after code replacement.
+  * `-DDEBUG_INFO` can also be defined in `src/replace_function.hpp`. In this way, the ld_preload library will store all machine code per function it inserted to the target process as a `uint8_t` format array into a file. The file can be found in the `tmp_data_path` you defined in the config file. 
+- if `-DDEBUG` flag is added, after code replacement, Ocolos will first send `SIGSTOP` signal to target process and then resume the target process by `PTRACE_DETACH`. In this way, it allows debugging tools such as `GDB` to attach to the target process and observe what goes wrong after code replacement.
 
 
 
