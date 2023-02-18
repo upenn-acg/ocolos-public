@@ -1,8 +1,8 @@
 #!/bin/bash
 
-OCOLOS_PATH=/home/zyuxuan/ocolos-public
-OCOLOS_DATA_PATH=/home/zyuxuan/ocolos_data
-BOLT_PATH=/home/zyuxuan/BOLT-cont-opt/build
+OCOLOS_PATH=/home/ocolos/ocolos-public
+OCOLOS_DATA_PATH=/home/ocolos/ocolos_data
+BOLT_PATH=/home/ocolos/BOLT/build
 MYSQL_BASE_PATH=/usr/local/mysql
 RUN_BENCHMARK_CMD="/usr/bin/sysbench /usr/share/sysbench/oltp_read_only.lua --threads=4 --events=100000000 --time=60 --mysql-host=127.0.0.1 --mysql-port=3306 --mysql-user=ocolos --mysql-db=ocolos_db --tables=4 --table-size=10000 --range_selects=off --db-ps-mode=disable --report-interval=1 run"
 
