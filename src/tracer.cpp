@@ -2,7 +2,6 @@
 #include "extract_machine_code.hpp"
 #include "ptrace_pause.hpp"
 
-//#define DEBUG
 using namespace std;
 
 int main(){
@@ -146,11 +145,13 @@ int main(){
       t.join();      
       printf("[tracer][OK] code replacement done!\n");
       #ifdef DEBUG
-//      while(true);
+      while(true);
       #endif
 
       /*--------- run cont optimization ---------*/
+      #ifdef CONT_OPT
       run_perf_record(target_pid, &ocolos_environ);
+      #endif
    }
 }
 

@@ -33,8 +33,6 @@
 #include <filesystem>
 
 #define panic(X) fprintf(stderr, #X "\n");
-#define TIME_MEASUREMENT
-#define DEBUG_INFO
 
 using namespace std;
 
