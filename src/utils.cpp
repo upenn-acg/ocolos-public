@@ -326,13 +326,13 @@ char** split_str_2_char_array(const string &str){
 
 
 void clean_up(const ocolos_env* ocolos_environ){
-   string command = "rm -rf "+ocolos_environ->tmp_data_path+"bolted_functions.bin"+
-                    ocolos_environ->tmp_data_path+" call_sites.bin"+
-                    ocolos_environ->tmp_data_path+" v_table.bin"+
-                    ocolos_environ->tmp_data_path+" unmoved_func.bin"+
-                    ocolos_environ->tmp_data_path+" *.data"+
-                    ocolos_environ->tmp_data_path+" *.fdata"+
-                    ocolos_environ->tmp_data_path+" *.txt"+
-                    ocolos_environ->tmp_data_path+" *.old";
+   string command = "rm -rf "+ocolos_environ->tmp_data_path+"bolted_functions.bin "+
+                    ocolos_environ->tmp_data_path+"call_sites.bin "+
+                    ocolos_environ->tmp_data_path+"v_table.bin "+
+                    ocolos_environ->tmp_data_path+"unmoved_func.bin "+
+                    ocolos_environ->tmp_data_path+"*.data "+
+                    ocolos_environ->tmp_data_path+"*.fdata "+
+                    ocolos_environ->tmp_data_path+"*.txt "+
+                    ocolos_environ->tmp_data_path+"*.old ";
    if (system(command.c_str())==-1) exit(-1);
 }
