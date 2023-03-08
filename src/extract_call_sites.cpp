@@ -32,7 +32,7 @@ void thread_function(vector<pair<long, long>> func_name, unordered_map<long, cal
          printf("Failed to run command\n" );
          printf("function addr: 0x%lx\n", func_name[i].first);
          sleep(1);
-         popen(command_cstr, "r");
+         fp = popen(command_cstr, "r");
          //exit(-1);
       }
 
