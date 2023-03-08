@@ -90,7 +90,7 @@ Or if you prefer to build sysbench from source, please refer instructions in the
 
 
 ## Build & run Ocolos
-- Navigate to `ocolos_mysql` directory.  
+- Navigate to `ocolos-public` directory.  
 - In the file `config`, specify the absolute path for `nm`,`perf`,`objdump`,`llvm-bolt`,`perf2bolt` [^3]
    [^3]: if `nm`,`objdump` and `perf` are already in shell, it's OK that their paths are not specified in `config`. This can be checked by `which nm`, `which objdump` and `which perf`.
 - In `config`, please also specify the commands to run `MySQL server` and `sysbench`. The example commands are given in the config file. 
