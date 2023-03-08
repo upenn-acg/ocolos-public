@@ -258,7 +258,6 @@ void run_perf2bolt(const ocolos_env* ocolos_environ){
          vector<string> words = split_line(line);
          if (words.size()>1){
             if (words[0]=="####"){
-               printf("[tracer] we've received #### !!!!!\n");
                string file_path = ocolos_environ->dir_path+"BOLTed_bin_info.txt";
                FILE* fp = fopen(file_path.c_str(), "w");
                fprintf(fp, "%s\n", ocolos_environ->bolted_binary_path.c_str());
