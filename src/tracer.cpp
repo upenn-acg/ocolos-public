@@ -132,7 +132,7 @@ int main(){
          ptrace(PTRACE_DETACH, tids[i], NULL, NULL);	
       }
 
-      #ifndef DEBUG
+      #ifndef DEBUG_INFO
       clean_up(&ocolos_environ);
       #endif
 
@@ -144,7 +144,7 @@ int main(){
 
       t.join();      
       printf("[tracer][OK] code replacement done!\n");
-      #ifdef DEBUG_INFO
+      #ifdef DEBUG
       while(true);
       #endif
 
