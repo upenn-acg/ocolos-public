@@ -144,7 +144,7 @@ int main(){
 
       t.join();      
       printf("[tracer][OK] code replacement done!\n");
-      #ifdef DEBUG
+      #ifdef DEBUG_INFO
       while(true);
       #endif
 
