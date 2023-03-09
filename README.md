@@ -155,7 +155,7 @@ In `Makefile`'s `CXXFLAGS`,
   * `-DDEBUG_INFO` can also be defined in `src/replace_function.hpp`. In this way, the ld_preload library will store all machine code per function it inserted to the target process as a `uint8_t` format array into a file. The file can be found in the `tmp_data_path` you defined in the config file. 
 - if `-DDEBUG` flag is added, after code replacement, Ocolos will first send `SIGSTOP` signal to target process and then resume the target process by `PTRACE_DETACH`. In this way, it allows debugging tools such as `GDB` to attach to the target process and observe what goes wrong after code replacement.
 
-If the code replacement got a failure, you may want ot do the following things to fix this problem
+If the code replacement runs into a failure, you may want to do the following things to fix this problem
 - first add the `-DDEBUG_INFO` to `CXXFLAGS` in Makefile and compile again.
 - then run `./tracer` 
 - after `tracer` run into an error, you can check `{tmp_data_dir}/machine_code.txt`'s last few lines
