@@ -120,9 +120,9 @@ int main(){
       for (unsigned i=0; i<tids.size(); i++){
          int rc = syscall(SYS_tgkill, tids[0], tids[i], SIGSTOP);	
       }
-      for (unsigned i=0; i<tids.size(); i++){
-         ptrace(PTRACE_CONT, tids[i], NULL, SIGSTOP);
-      }
+      //for (unsigned i=0; i<tids.size(); i++){
+      //   ptrace(PTRACE_CONT, tids[i], NULL, SIGSTOP);
+      //}
       #endif
 
 
