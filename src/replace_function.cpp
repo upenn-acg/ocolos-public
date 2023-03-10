@@ -146,7 +146,8 @@ string get_data_path(int listen_fd){
    socklen_t clientaddrlen = sizeof(clientaddr);
    int comm_fd = accept(listen_fd, (struct sockaddr*)&clientaddr, &clientaddrlen);
    printf("[tracee (lib)] connection from %s\n", inet_ntoa(clientaddr.sin_addr));
-   char* buf = (char*)malloc(100*sizeof(char));
+   char* buf = (char*)malloc(500*sizeof(char));
+   memset(buf, 0, 500*sizeof(char));
    int n = read(comm_fd, buf, 80);
    if (n<=0){
       printf("[tracee (lib)] error in receiving msg from tracee.\n");
@@ -154,6 +155,7 @@ string get_data_path(int listen_fd){
    }
    close(comm_fd);
    string path(buf);
+   free(buf);
    return path;
 }
 
