@@ -86,6 +86,7 @@ void* get_lib_addr(int listen_fd){
       printf("[tracer] error in receiving msg from tracee.\n");
    }
    string addr(buf);
+   free(buf);
    void* lib_addr = (void*)(convert_str_2_int(addr));		
    printf("[tracer] the received address is: %p\n", lib_addr);
    close(listen_fd);
@@ -134,6 +135,7 @@ void send_data_path(const ocolos_env* ocolos_environ){
    if (n <= 0) exit(-1);	
    close(sockfd);
    close(comm_fd);
+   free(buf);
 }
 
 
@@ -163,9 +165,10 @@ void run_perf_record(int target_pid, const ocolos_env* ocolos_environ){
                        " -- sleep 60";
 
    }
-   char * command_cstr = new char [command.length()+1];
+   char* command_cstr = new char [command.length()+1];
    strcpy (command_cstr, command.c_str());
    if (system(command_cstr)!=0) printf("[tracer] error in %s\n",__FUNCTION__);
+   free(command_cstr);
 }
 
 
@@ -193,6 +196,7 @@ void run_perf2bolt(const ocolos_env* ocolos_environ){
 
 
       fp1 = popen(command_cstr, "r");
+      free(command_cstr);
 
       if (fp1 == NULL){
          printf("[tracer] fail to run perf2bolt\n" );
@@ -246,6 +250,7 @@ void run_perf2bolt(const ocolos_env* ocolos_environ){
       strcpy (command_cstr, command.c_str());
 
       fp1 = popen(command_cstr, "r");
+      free(command_cstr);
 
       if (fp1 == NULL){
          printf("[tracer] fail to run perf2bolt\n" );
@@ -304,6 +309,7 @@ unordered_map<long, func_info> run_llvmbolt(const ocolos_env* ocolos_environ){
    char* command_cstr = new char[command.length()+1];
    strcpy(command_cstr, command.c_str()); 
    fp1 = popen(command_cstr, "r");
+   free(command_cstr);
 
    if (fp1 == NULL){
       printf("Failed to run llvm-bolt command\n" );
@@ -352,6 +358,8 @@ unordered_map<long, func_info> get_func_with_original_addr(const ocolos_env* oco
    char* command_cstr = new char[command.length()+1];
    strcpy (command_cstr, command.c_str());
    fp = popen(command_cstr, "r");
+   free(command_cstr);
+
    if (fp == NULL){
       printf("Failed to run nm on original binary\n" );
       exit(-1);
@@ -427,6 +435,7 @@ unordered_map<string, string> get_v_table(const ocolos_env* ocolos_environ){
    char* command_cstr = new char[command.length()+1];
    strcpy (command_cstr, command.c_str());
    fp3 = popen(command_cstr, "r");
+   free(command_cstr);
    if (fp3 == NULL){
       printf("[tracer] Failed to run nm on BOLTed binary\n" );
       exit(-1);

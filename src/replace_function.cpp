@@ -199,6 +199,7 @@ void before_main(){
    strcpy(buf, addr.c_str());
    int n = write(sockfd, buf, addr.size());
    if (n <= 0) exit(-1);	
+   free(buf);
    close(sockfd);
 }
 

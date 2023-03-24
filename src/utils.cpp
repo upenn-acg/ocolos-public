@@ -321,7 +321,7 @@ char** split_str_2_char_array(const string &str){
       memset(words[i], '\0', sizeof(char)*(word_vec[i].size()+1));
       strcpy(words[i], word_vec[i].c_str());
    }
-   memset(words[word_vec.size()], '\0', sizeof(char));
+   words[word_vec.size()] = NULL; 
    return words;
 }
 
