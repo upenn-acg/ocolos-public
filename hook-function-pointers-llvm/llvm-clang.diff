@@ -1,0 +1,60 @@
+diff --git a/clang/lib/CodeGen/BackendUtil.cpp b/clang/lib/CodeGen/BackendUtil.cpp
+index 991620766b55..4e9e52cb0e02 100644
+--- a/clang/lib/CodeGen/BackendUtil.cpp
++++ b/clang/lib/CodeGen/BackendUtil.cpp
+@@ -84,6 +84,7 @@
+ #include "llvm/Transforms/Utils/CanonicalizeAliases.h"
+ #include "llvm/Transforms/Utils/Debugify.h"
+ #include "llvm/Transforms/Utils/EntryExitInstrumenter.h"
++#include "llvm/Transforms/Utils/HookFunctionPointers.h"
+ #include "llvm/Transforms/Utils/NameAnonGlobals.h"
+ #include "llvm/Transforms/Utils/SymbolRewriter.h"
+ #include <memory>
+@@ -1407,6 +1408,11 @@ void EmitAssemblyHelper::EmitAssemblyWithNewPassManager(
+             MPM.addPass(InstrProfiling(*Options, false));
+           });
+ 
++    PB.registerPipelineStartEPCallback(
++                                       [](ModulePassManager &MPM, OptimizationLevel Level) {
++                                         MPM.addPass(createModuleToFunctionPassAdaptor(std::move(HookFunctionPointersPass())));
++                                       });
++    
+     if (CodeGenOpts.OptimizationLevel == 0) {
+       MPM = PB.buildO0DefaultPipeline(Level, IsLTO || IsThinLTO);
+     } else if (IsThinLTO) {
+diff --git a/llvm/lib/Passes/PassBuilder.cpp b/llvm/lib/Passes/PassBuilder.cpp
+index 151adbe383fa..e3db4971eb6f 100644
+--- a/llvm/lib/Passes/PassBuilder.cpp
++++ b/llvm/lib/Passes/PassBuilder.cpp
+@@ -217,6 +217,7 @@
+ #include "llvm/Transforms/Utils/EntryExitInstrumenter.h"
+ #include "llvm/Transforms/Utils/FixIrreducible.h"
+ #include "llvm/Transforms/Utils/HelloWorld.h"
++#include "llvm/Transforms/Utils/HookFunctionPointers.h"
+ #include "llvm/Transforms/Utils/InjectTLIMappings.h"
+ #include "llvm/Transforms/Utils/InstructionNamer.h"
+ #include "llvm/Transforms/Utils/LCSSA.h"
+diff --git a/llvm/lib/Passes/PassRegistry.def b/llvm/lib/Passes/PassRegistry.def
+index fef3aba69e25..3f422527ca86 100644
+--- a/llvm/lib/Passes/PassRegistry.def
++++ b/llvm/lib/Passes/PassRegistry.def
+@@ -239,6 +239,7 @@ FUNCTION_PASS("make-guards-explicit", MakeGuardsExplicitPass())
+ FUNCTION_PASS("gvn-hoist", GVNHoistPass())
+ FUNCTION_PASS("gvn-sink", GVNSinkPass())
+ FUNCTION_PASS("helloworld", HelloWorldPass())
++FUNCTION_PASS("hook-function-pointers", HookFunctionPointersPass())
+ FUNCTION_PASS("infer-address-spaces", InferAddressSpacesPass())
+ FUNCTION_PASS("instcombine", InstCombinePass())
+ FUNCTION_PASS("instcount", InstCountPass())
+diff --git a/llvm/lib/Transforms/Utils/CMakeLists.txt b/llvm/lib/Transforms/Utils/CMakeLists.txt
+index be4f7125eb85..2cde05cd3ba2 100644
+--- a/llvm/lib/Transforms/Utils/CMakeLists.txt
++++ b/llvm/lib/Transforms/Utils/CMakeLists.txt
+@@ -28,6 +28,7 @@ add_llvm_component_library(LLVMTransformUtils
+   GlobalStatus.cpp
+   GuardUtils.cpp
+   HelloWorld.cpp
++  HookFunctionPointers.cpp
+   InlineFunction.cpp
+   InjectTLIMappings.cpp
+   InstructionNamer.cpp

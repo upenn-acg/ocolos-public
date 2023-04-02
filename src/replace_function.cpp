@@ -145,6 +145,12 @@ string get_data_path(int listen_fd){
    struct sockaddr_in clientaddr;
    socklen_t clientaddrlen = sizeof(clientaddr);
    int comm_fd = accept(listen_fd, (struct sockaddr*)&clientaddr, &clientaddrlen);
+   const int enable = 1;
+   if (setsockopt(comm_fd, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0){
+      printf("[tracer(lib)] setsockopt(SO_REUSEADDR) failed\n");
+      exit(-1);
+   }
+
    printf("[tracee (lib)] connection from %s\n", inet_ntoa(clientaddr.sin_addr));
    char* buf = (char*)malloc(500*sizeof(char));
    memset(buf, 0, 500*sizeof(char));
@@ -178,8 +184,13 @@ void before_main(){
    printf("[tracee (lib)] The virtual address of insert_machine_code() is: %p\n", insert_machine_code);		
 
    int sockfd = socket(PF_INET, SOCK_STREAM, 0);
+   const int enable = 1;
    if (sockfd < 0) {
       printf("[tracee (lib)] cannot open socket (%s)\n", strerror(errno));
+      exit(-1);
+   }
+   if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0){
+      printf("[tracer(lib)] setsockopt(SO_REUSEADDR) failed\n");
       exit(-1);
    }
 
@@ -309,6 +320,11 @@ void insert_machine_code(void){
    ocolos_env ocolos_environ;
 
    int listen_fd = socket(PF_INET, SOCK_STREAM, 0);
+   const int enable = 1;
+   if (setsockopt(listen_fd, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0){
+      printf("[tracer(lib)] setsockopt(SO_REUSEADDR) failed\n");
+      exit(-1);
+   }
    struct sockaddr_in  servaddr0;
 
    create_tcp_socket(listen_fd, servaddr0);
@@ -317,6 +333,11 @@ void insert_machine_code(void){
    // and sends the address of insert_machine_code() to 
    // tracer
    int sockfd = socket(PF_INET, SOCK_STREAM, 0);
+   if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0){
+      printf("setsockopt(SO_REUSEADDR) failed");
+      exit(-1);
+   }
+
    struct sockaddr_in servaddr;
    bzero(&servaddr, sizeof(servaddr));
    servaddr.sin_family = AF_INET;

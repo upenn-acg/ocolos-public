@@ -79,6 +79,12 @@ void* get_lib_addr(int listen_fd){
    struct sockaddr_in clientaddr;
    socklen_t clientaddrlen = sizeof(clientaddr);
    int comm_fd = accept(listen_fd, (struct sockaddr*)&clientaddr, &clientaddrlen);
+   const int enable = 1;
+   if (setsockopt(comm_fd, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0){
+      printf("setsockopt(SO_REUSEADDR) failed");
+      exit(-1);
+   }
+
    printf("[tracer] connection from %s\n", inet_ntoa(clientaddr.sin_addr));
    char* buf = (char*)malloc(100*sizeof(char));
    int n = read(comm_fd, buf, 50);
@@ -97,7 +103,14 @@ void* get_lib_addr(int listen_fd){
 
 
 void send_data_path(const ocolos_env* ocolos_environ){
+   const int enable = 1;   
+
    int listen_fd = socket(PF_INET, SOCK_STREAM, 0);
+   if (setsockopt(listen_fd, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0){
+      printf("setsockopt(SO_REUSEADDR) failed");
+      exit(-1);
+   } 
+
    struct sockaddr_in servaddr;
    bzero(&servaddr, sizeof(servaddr));
    servaddr.sin_family = AF_INET;
@@ -108,6 +121,10 @@ void send_data_path(const ocolos_env* ocolos_environ){
 
    socklen_t servaddrlen = sizeof(servaddr);
    int comm_fd = accept(listen_fd, (struct sockaddr*)&servaddr, &servaddrlen);
+   if (setsockopt(comm_fd, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0){
+      printf("setsockopt(SO_REUSEADDR) failed");
+      exit(-1);
+   }
    printf("[tracer] connection from %s\n", inet_ntoa(servaddr.sin_addr));
 
 
@@ -116,7 +133,11 @@ void send_data_path(const ocolos_env* ocolos_environ){
       printf("[tracer] cannot open socket (%s)\n", strerror(errno));
       exit(-1);
    }
-
+   if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0){
+      printf("setsockopt(SO_REUSEADDR) failed");
+      exit(-1);
+   }
+ 
    // open a socket, connect to the tracer's parent process
    // and sends the address of insert_machine_code() to 
    // tracer
@@ -135,6 +156,7 @@ void send_data_path(const ocolos_env* ocolos_environ){
    if (n <= 0) exit(-1);	
    close(sockfd);
    close(comm_fd);
+   close(listen_fd);
    free(buf);
 }
 
