@@ -120,9 +120,6 @@ int main(){
       for (unsigned i=0; i<tids.size(); i++){
          int rc = syscall(SYS_tgkill, tids[0], tids[i], SIGSTOP);	
       }
-      //for (unsigned i=0; i<tids.size(); i++){
-      //   ptrace(PTRACE_CONT, tids[i], NULL, SIGSTOP);
-      //}
       #endif
 
 
@@ -148,7 +145,14 @@ int main(){
       while(true);
       #endif
 
-      /*--------- run cont optimization ---------*/
+      // continuous optimization
+      // the perf record will collect profile from the C1 round text section
+      // the perf.data collected from C1 round together with 
+      // (1) BOLTed binary produced from C0 roound + 
+      // (2) callstack_func.bin (the function on the call stack when C0 round code replacement is performed) +
+      // (3) the info of BOLTed binary (BOLTed text section's starting address)
+      // will be sent to llvm-bolt to produce a C1 round BOLTed binary.
+      // C1 round's BOLTed binary is used for C1 round's code replacement
       #ifdef CONT_OPT
       run_perf_record(target_pid, &ocolos_environ);
       #endif
