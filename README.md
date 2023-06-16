@@ -26,7 +26,9 @@ Please follow the commands below to install `BOLT`
 ```bash
 > mkdir BOLT && cd BOLT
 > git clone git@github.com:upenn-acg/BOLT.git llvm-bolt
+> cd llvm-bolt
 > git checkout ocolos/cont-opt
+> cd ..
 > mkdir build && cd build
 > cmake -G "Unix Makefiles" ../llvm-bolt/llvm -DLLVM_TARGETS_TO_BUILD="X86;AArch64" -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_ASSERTIONS=ON -DLLVM_ENABLE_PROJECTS="clang;lld;bolt"
 > make -j
