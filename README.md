@@ -146,7 +146,7 @@ Or if you prefer to build sysbench from source, please refer instructions in the
       + run this script `sh scripts/C1_BOLTed_performance_test.sh`
 
 ## UPDATES: Support for the AArch64 platform
-- Thanks to Wenlong who contribute to the Ocolos, making it also work for the AArch64 platform.
+- Thanks to Wenlong who contributed to Ocolos, making it also work for the AArch64 platform.
 - The link to the version that supports AArch64 platform can be found [here](https://github.com/onroadmuwl/ocolos-public-aarch64).
 
 ## Miscellaneous (notes about how to debug Ocolos)
