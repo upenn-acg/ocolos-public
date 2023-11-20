@@ -1,0 +1,91 @@
+use std::env;
+use std::process;
+use unix_ipc::{channel, Bootstrapper, Receiver, Sender};
+use serde::{Deserialize, Serialize};
+use std::fs::File;
+use std::io::{Read, Write, BufReader, BufRead, Error};
+use std::path::Path;
+use std::ffi::OsStr;
+
+const ENV_VAR: &str = "PROC_CONNECT_TO";
+const path: &str = "/home.local/zyuxuan/ld_preload_server_socket.txt";
+
+#[derive(Serialize, Deserialize, Debug)]
+pub enum Task {
+    Sum(Vec<i64>, Sender<i64>),
+    Shutdown,
+}
+
+use std::net::{TcpStream};
+use std::str::from_utf8;
+
+fn main() {
+    match TcpStream::connect("localhost:8000") {
+        Ok(mut stream) => {
+            println!("Successfully connected to server in port 3333");
+
+            let msg = b"Hello!";
+
+            stream.write(msg).unwrap();
+            println!("Sent Hello, awaiting reply...");
+
+            let mut data = [0 as u8; 6]; // using 6 byte buffer
+            match stream.read_exact(&mut data) {
+                Ok(_) => {
+                    if &data == msg {
+                        println!("Reply is ok!");
+                    } else {
+                        let text = from_utf8(&data).unwrap();
+                        println!("Unexpected reply: {}", text);
+                    }
+                },
+                Err(e) => {
+                    println!("Failed to receive data: {}", e);
+                }
+            }
+        },
+        Err(e) => {
+            println!("Failed to connect: {}", e);
+        }
+    }
+    println!("Terminated.");
+}
+
+
+
+/*
+fn main() -> Result<(), Error> {
+    let input = File::open(path)?;
+    let buffered = BufReader::new(input).lines().map(|x| x.unwrap()).collect::<Vec<String>>();
+    let socket = (&buffered[0]).to_owned();
+    let socket_path = Path::new(&socket[..]);
+    println!("{}", socket);
+
+    let bootstrapper_bind_result : std::result::Result<unix_ipc::Bootstrapper<Task>, std::io::Error> = Bootstrapper::bind(socket_path); 
+    match &bootstrapper_bind_result {
+      Ok(val) => println!("successfully connect to {:?}", val),
+      Err(e) =>  panic!("error! {}", e),
+    };
+
+    let bootstrapper = bootstrapper_bind_result.unwrap();
+
+    let (tx, rx) = channel().unwrap();
+    bootstrapper.send(Task::Sum(vec![23, 42], tx)).unwrap();
+    println!("sum: {}", rx.recv().unwrap());
+
+//    let (tx1, rx1) = channel().unwrap();
+//    bootstrapper.send(Task::Sum(vec![1, 2, 99], tx1)).unwrap();
+//    println!("sum: {}", rx1.recv().unwrap());
+
+    bootstrapper.send(Task::Shutdown);
+
+    Ok(())
+}
+*/
+//fn main() {
+//   let (tx, rx) = channel::<String>().unwrap();
+
+/*   bootstrapper.send(Task::Sum(vec![23, 42], tx)).unwrap();
+   println!("sum: {}", rx.recv().unwrap());
+   bootstrapper.send(Task::Shutdown).unwrap();*/
+//}

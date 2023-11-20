@@ -1,0 +1,21 @@
+(1) in src/lib.rs, please modify line 14 ~ line 19.
+    in src/server/main.rs, please modify line line 9 ~ line 13.
+    1. "PERF_DATA_DIR" is the directory where you store all of your perf.data.
+    2. "CLANG_BOLT_PATH" is the path where you place your BOLTed clang.
+    3. "NUM_PERF_DATA" the number of first X perf.data you want to generate,
+       where X = NUM_PERF_DATA 
+    4. "NUM_PERF2BOLT_IN_PARALLEL" can at most be 6, due to the limitation of 
+       main memory. 
+
+(2) 1. type "cargo build" to build the library and server binary. 
+    2. The built library "librca.so" is in target/debug.
+    3. The built binary "server" is in target/debug
+
+(3) here is a simple example to add this library: 
+    suppose we want to run "clang main.c -o main" we should run it in this way: 
+    1. in one terminal, start the server by "./target/debug/server" 
+    2. in another terminal, start the client by the following command:
+       LD_PRELOAD={your path}/floar/rca-clang-new/target/debug/librca.so /bin/sh -c "{your path}/llvm-project/build/bin/clang main.c -o main"
+       (you should replace {your path} to your real path for "floar" and "clang")
+    3. each time you want to use rca-clang-server-client to build something new, 
+       please restart server.
