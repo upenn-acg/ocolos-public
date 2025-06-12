@@ -2,7 +2,8 @@ CPP=g++
 CC=clang++
 CPPFLAGS=-I/usr/local/include -g -Wall -O3 -DDEBUG_INFO -DTIME_MEASUREMENT
 LINKER_FLAGS=-L/usr/local/lib -lpthread -ldl
-LIBUNWIND_FLAGS=-lunwind -lunwind-ptrace -lunwind-generic
+LIBUNWIND_FLAGS=-lunwind -lunwind-ptrace -lunwind-generic 
+LIBELF_FLAGS=-lelf -lcapstone
 BOOST_FLAGS=-lboost_serialization
 SRC_DIR=src
 
@@ -26,7 +27,7 @@ elf-extract/target/release/libelf_extract.a:
 	cd elf-extract/ && cargo build --release
 
 extract_call_sites: $(SRC_DIR)/utils.hpp $(SRC_DIR)/utils.cpp $(SRC_DIR)/extract_call_sites.cpp 
-	$(CC) $(BOOST_FLAGS) -pthread  $(SRC_DIR)/extract_call_sites.cpp $(SRC_DIR)/utils.cpp -o $@ 
+	$(CC) $(BOOST_FLAGS) $(LIBELF_FLAGS) -pthread  $(SRC_DIR)/extract_call_sites.cpp $(SRC_DIR)/utils.cpp -o $@ 
 
 clean:
 	rm -rf $(SRC_DIR)/*.gch *.so *.bolt *.fdata *.data tracer *.data.old *.txt *.o	extract_call_sites 

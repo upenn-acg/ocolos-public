@@ -13,6 +13,8 @@ Please refer instructions from links or directly run commands listed below to in
 - binutils (for objdump) [^1] : [https://ftp.gnu.org/gnu/binutils/](https://ftp.gnu.org/gnu/binutils/) 
 - boost: `sudo apt-get install libboost-all-dev` 
 [^1]:If your `objdump` version is older than 2.27, please download the latest version of `binutils`.  
+- libelf and capstone: `sudo apt-get install libcapstone-dev libelf-dev`
+
 
 ## Download ocolos for mysql
 ```bash

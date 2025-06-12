@@ -13,6 +13,9 @@
 #include <fcntl.h>
 #include "boost_serialization.hpp"
 #include "utils.hpp"
+#include <libelf.h>
+#include <gelf.h>
+#include <capstone/capstone.h>
 #define N 16
 
 using namespace std;
