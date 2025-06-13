@@ -168,6 +168,6 @@ If the code replacement runs into a failure, you may want to do the following th
 - after `tracer` run into an error, you can check `{tmp_data_dir}/machine_code.txt`'s last few lines
 - if the last few lines shows that the error is caused by `mmap failed. file exists.`
    + it indicates that the BOLTed text section overlaps with the heap of the running `mysqld` process. 
-   + to solve this problem, please comment out [this line](https://github.com/upenn-acg/ocolos-public/blob/main/src/replace_function.cpp#L232) in `replace_function.cpp`, and then compile Ocolos again.
+   + to solve this problem, please comment out [this line](https://github.com/upenn-acg/ocolos-public/blob/main/src/replace_function.cpp#L246) in `replace_function.cpp`, and then compile Ocolos again.
 
 
