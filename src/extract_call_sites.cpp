@@ -26,6 +26,13 @@ void thread_function(vector<pair<long, long>> func_name, unordered_map<long, cal
       char path[1000];
       string start_addr = convert_long_2_hex_string(func_name[i].first);
       string stop_addr = convert_long_2_hex_string(func_name[i].first + func_name[i].second);
+
+      int fd = open(new_target_binary.c_str(), O_RDONLY);
+      if (fd < 0) {
+        perror("open");
+        exit(0);
+      }
+
       string command = ""+ocolos_environ->objdump_path+" -d --start-addr=0x" + start_addr + " --stop-addr=0x" + stop_addr + " " + new_target_binary;
       char * command_cstr = new char [command.length()+1];
       strcpy (command_cstr, command.c_str());
@@ -101,6 +108,11 @@ int main(){
    FILE *fp3;
    char path3[1000];
    ocolos_env ocolos_environ;
+   if (elf_version(EV_CURRENT) == EV_NONE) {
+     fprintf(stderr, "ELF library initialization failed.\n");
+     return 1;
+   }
+ 
    string command = "cp "+ocolos_environ.target_binary_path+" "+ocolos_environ.tmp_data_path;
    system(command.c_str());
 
@@ -158,7 +170,7 @@ int main(){
    vector<thread> threads;	
    for (int i=0; i<N; i++){
       thread t(thread_function, func_names[i], ref(call_sites_array[i]), new_target_binary, &ocolos_environ);		
-      threads.push_back(move(t));
+      threads.push_back(std::move(t));
    }	
 
    for (int i=0; i<N; i++){
