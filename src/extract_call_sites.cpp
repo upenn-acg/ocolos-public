@@ -16,6 +16,8 @@
 #include <libelf.h>
 #include <gelf.h>
 #include <capstone/capstone.h>
+#include <sys/stat.h>
+#include <sys/mman.h>
 #define N 16
 
 using namespace std;
@@ -32,6 +34,20 @@ void thread_function(vector<pair<long, long>> func_name, unordered_map<long, cal
         perror("open");
         exit(0);
       }
+
+      struct stat st;
+      fstat(fd, &st);
+      void *map = mmap(NULL, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
+      if (map == MAP_FAILED) { perror("mmap"); close(fd); return; }
+
+      Elf *e = elf_begin(fd, ELF_C_READ, NULL);
+      if (!e) {
+        fprintf(stderr, "elf_begin() failed.\n");
+        close(fd);
+        exit(0);
+      }
+
+      
 
       string command = ""+ocolos_environ->objdump_path+" -d --start-addr=0x" + start_addr + " --stop-addr=0x" + stop_addr + " " + new_target_binary;
       char * command_cstr = new char [command.length()+1];
