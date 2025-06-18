@@ -29,6 +29,9 @@ void thread_function(vector<pair<long, long>> func_name, unordered_map<long, cal
       string start_addr = convert_long_2_hex_string(func_name[i].first);
       string stop_addr = convert_long_2_hex_string(func_name[i].first + func_name[i].second);
 
+      uint64_t start_addr_ = stoull(start_addr, nullptr, 0);
+      uint64_t stop_addr_ = stoull(stop_addr, nullptr, 0);
+
       int fd = open(new_target_binary.c_str(), O_RDONLY);
       if (fd < 0) {
         perror("open");
@@ -47,7 +50,46 @@ void thread_function(vector<pair<long, long>> func_name, unordered_map<long, cal
         exit(0);
       }
 
-      
+      size_t shstrndx;
+      elf_getshdrstrndx(e, &shstrndx);
+
+      Elf_Scn *scn = NULL;
+      GElf_Shdr shdr;
+      while ((scn = elf_nextscn(e, scn)) != NULL) {
+        gelf_getshdr(scn, &shdr);
+        char *name = elf_strptr(e, shstrndx, shdr.sh_name);
+        if (strcmp(name, ".text") == 0) {      
+
+          uint64_t section_addr = shdr.sh_addr;
+          uint64_t section_offset = shdr.sh_offset;
+
+          if (start_addr_ < section_addr || stop_addr_ > section_addr + shdr.sh_size) {
+            fprintf(stderr, "Address range not in .text section\n");
+            break;
+          }
+
+          size_t offset_start = section_offset + (start_addr_ - section_addr);
+          size_t size = stop_addr_ - start_addr_;
+          uint8_t *code = (uint8_t *)map + offset_start;
+
+          // Capstone disassemble
+          csh handle;
+          cs_insn *insn;
+          size_t count;
+
+          if (cs_open(CS_ARCH_X86, CS_MODE_64, &handle) != CS_ERR_OK)
+            break;
+
+          count = cs_disasm(handle, code, size, start_addr_, 0, &insn);
+          for (size_t j = 0; j < count; j++) {
+            printf("0x%" PRIx64 ": %s %s\n", insn[j].address, insn[j].mnemonic, insn[j].op_str);
+          }
+
+          cs_free(insn, count);
+          cs_close(&handle);
+          break;
+        }
+      }
 
       string command = ""+ocolos_environ->objdump_path+" -d --start-addr=0x" + start_addr + " --stop-addr=0x" + stop_addr + " " + new_target_binary;
       char * command_cstr = new char [command.length()+1];
