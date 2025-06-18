@@ -30,4 +30,4 @@ extract_call_sites: $(SRC_DIR)/utils.hpp $(SRC_DIR)/utils.cpp $(SRC_DIR)/extract
 	$(CC) $(BOOST_FLAGS) $(LIBELF_FLAGS) -pthread  $(SRC_DIR)/extract_call_sites.cpp $(SRC_DIR)/utils.cpp -o $@ 
 
 clean:
-	rm -rf $(SRC_DIR)/*.gch *.so *.bolt *.fdata *.data tracer *.data.old *.txt *.o	extract_call_sites 
+	rm -rf $(SRC_DIR)/*.gch *.so *.bolt *.fdata *.data tracer *.data.old *.txt *.o	extract_call_sites elf-extract/target 

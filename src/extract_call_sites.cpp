@@ -29,8 +29,8 @@ void thread_function(vector<pair<long, long>> func_name, unordered_map<long, cal
       string start_addr = convert_long_2_hex_string(func_name[i].first);
       string stop_addr = convert_long_2_hex_string(func_name[i].first + func_name[i].second);
 
-      uint64_t start_addr_ = stoull(start_addr, nullptr, 0);
-      uint64_t stop_addr_ = stoull(stop_addr, nullptr, 0);
+      uint64_t start_addr_ = convert_str_2_long(start_addr);
+      uint64_t stop_addr_ = convert_str_2_long(stop_addr);
 
       int fd = open(new_target_binary.c_str(), O_RDONLY);
       if (fd < 0) {
@@ -64,6 +64,8 @@ void thread_function(vector<pair<long, long>> func_name, unordered_map<long, cal
           uint64_t section_offset = shdr.sh_offset;
 
           if (start_addr_ < section_addr || stop_addr_ > section_addr + shdr.sh_size) {
+            cout<<"@@@ "<<start_addr<<", "<<stop_addr<<"\n";
+            fprintf(stderr, "start addr: 0x%lx, stop addr: 0x%lx\n", start_addr_, stop_addr_);
             fprintf(stderr, "Address range not in .text section\n");
             break;
           }
@@ -90,6 +92,10 @@ void thread_function(vector<pair<long, long>> func_name, unordered_map<long, cal
           break;
         }
       }
+      
+      elf_end(e);
+      munmap(map, st.st_size);
+      close(fd);      
 
       string command = ""+ocolos_environ->objdump_path+" -d --start-addr=0x" + start_addr + " --stop-addr=0x" + stop_addr + " " + new_target_binary;
       char * command_cstr = new char [command.length()+1];
@@ -119,7 +125,7 @@ void thread_function(vector<pair<long, long>> func_name, unordered_map<long, cal
             // if it's a library call
             if (words[8].substr(words[8].size()-5, words[8].size()-1)=="@plt>") continue;
             call_site_info call_info;
-            cout<<line;
+            //cout<<line;
             call_info.addr = convert_str_2_long(words[0].substr(0,words[0].size()-1));
             call_info.belonged_func = func_name[i].first;
 
