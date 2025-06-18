@@ -1,1 +1,0 @@
-/proj/zyuxuanssf-PG0/zyuxuan/ocolos-public/elf-extract/target/release/nm: /proj/zyuxuanssf-PG0/zyuxuan/ocolos-public/elf-extract/src/bin/nm.rs /proj/zyuxuanssf-PG0/zyuxuan/ocolos-public/elf-extract/src/lib.rs
