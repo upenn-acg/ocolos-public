@@ -18,11 +18,31 @@
 #include <capstone/capstone.h>
 #include <sys/stat.h>
 #include <sys/mman.h>
-#define N 16
+#define N 8
 
 using namespace std;
 
 void thread_function(vector<pair<long, long>> func_name, unordered_map<long, call_site_info> &call_sites, string new_target_binary, ocolos_env* ocolos_environ){
+   int fd = open(new_target_binary.c_str(), O_RDONLY);
+   if (fd < 0) {
+      perror("open");
+      exit(0);
+   }
+
+   sitruct stat st;
+   fstat(fd, &st);
+   void *map = mmap(NULL, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
+   if (map == MAP_FAILED) { perror("mmap"); close(fd); return; }
+   Elf *e = elf_begin(fd, ELF_C_READ, NULL);
+   if (!e) {
+      fprintf(stderr, "elf_begin() failed.\n");
+      close(fd);
+      exit(0);
+   }
+
+   size_t shstrndx;
+   elf_getshdrstrndx(e, &shstrndx);
+
    for (unsigned i=0; i<func_name.size(); i++){
       FILE *fp;
       char path[1000];
@@ -32,138 +52,79 @@ void thread_function(vector<pair<long, long>> func_name, unordered_map<long, cal
       uint64_t start_addr_ = convert_str_2_long(start_addr);
       uint64_t stop_addr_ = convert_str_2_long(stop_addr);
 
-      int fd = open(new_target_binary.c_str(), O_RDONLY);
-      if (fd < 0) {
-        perror("open");
-        exit(0);
-      }
-
-      struct stat st;
-      fstat(fd, &st);
-      void *map = mmap(NULL, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
-      if (map == MAP_FAILED) { perror("mmap"); close(fd); return; }
-
-      Elf *e = elf_begin(fd, ELF_C_READ, NULL);
-      if (!e) {
-        fprintf(stderr, "elf_begin() failed.\n");
-        close(fd);
-        exit(0);
-      }
-
-      size_t shstrndx;
-      elf_getshdrstrndx(e, &shstrndx);
-
       Elf_Scn *scn = NULL;
       GElf_Shdr shdr;
       while ((scn = elf_nextscn(e, scn)) != NULL) {
-        gelf_getshdr(scn, &shdr);
-        char *name = elf_strptr(e, shstrndx, shdr.sh_name);
-        if (strcmp(name, ".text") == 0) {      
+         gelf_getshdr(scn, &shdr);
+         char *name = elf_strptr(e, shstrndx, shdr.sh_name);
+         if (strcmp(name, ".text") == 0) {      
 
-          uint64_t section_addr = shdr.sh_addr;
-          uint64_t section_offset = shdr.sh_offset;
+            uint64_t section_addr = shdr.sh_addr;
+            uint64_t section_offset = shdr.sh_offset;
 
-          if (start_addr_ < section_addr || stop_addr_ > section_addr + shdr.sh_size) {
-            cout<<"@@@ "<<start_addr<<", "<<stop_addr<<"\n";
-            fprintf(stderr, "start addr: 0x%lx, stop addr: 0x%lx\n", start_addr_, stop_addr_);
-            fprintf(stderr, "Address range not in .text section\n");
-            break;
-          }
+            if (start_addr_ < section_addr || stop_addr_ > section_addr + shdr.sh_size) {
+               fprintf(stderr, "start addr: 0x%lx, stop addr: 0x%lx\n", start_addr_, stop_addr_);
+               fprintf(stderr, "Address range not in .text section\n");
+               break;
+            }
 
-          size_t offset_start = section_offset + (start_addr_ - section_addr);
-          size_t size = stop_addr_ - start_addr_;
-          uint8_t *code = (uint8_t *)map + offset_start;
+            size_t offset_start = section_offset + (start_addr_ - section_addr);
+            size_t size = stop_addr_ - start_addr_;
+            uint8_t *code = (uint8_t *)map + offset_start;
 
-          // Capstone disassemble
-          csh handle;
-          cs_insn *insn;
-          size_t count;
+            // Capstone disassemble
+            csh handle;
+            cs_insn *insn;
+            cs_detail *detail;
+            size_t count;
 
-          if (cs_open(CS_ARCH_X86, CS_MODE_64, &handle) != CS_ERR_OK)
-            break;
+            if (cs_open(CS_ARCH_X86, CS_MODE_64, &handle) != CS_ERR_OK)
+               break;
+            cs_option(handle, CS_OPT_DETAIL, CS_OPT_ON);
 
-          count = cs_disasm(handle, code, size, start_addr_, 0, &insn);
-          for (size_t j = 0; j < count; j++) {
-            printf("0x%" PRIx64 ": %s %s\n", insn[j].address, insn[j].mnemonic, insn[j].op_str);
-          }
+            count = cs_disasm(handle, code, size, start_addr_, 0, &insn);
+            for (size_t j = 0; j < count; j++) {
+               //printf("@@@ 0x%" PRIx64 ": %s %s\n", insn[j].address, insn[j].mnemonic, insn[j].op_str);
+               if (insn[j].id == X86_INS_CALL && insn[j].detail != NULL) {
+               printf("0x%" PRIx64 ": %s %s\n",
+                      insn[j].address,
+                      insn[j].mnemonic,
+                      insn[j].op_str);
+ 
+               detail = insn[j].detail;
+               cs_x86 *x86 = &detail->x86;
 
-          cs_free(insn, count);
-          cs_close(&handle);
-          break;
-        }
-      }
-      
-      elf_end(e);
-      munmap(map, st.st_size);
-      close(fd);      
+               // We only care about direct call instructions
+               if (x86->op_count > 0 && x86->operands[0].type == X86_OP_IMM) {
+                  call_site_info call_info;
+                  call_info.addr = insn[j].address;
+                  call_info.belonged_func = func_name[i].first;
 
-      string command = ""+ocolos_environ->objdump_path+" -d --start-addr=0x" + start_addr + " --stop-addr=0x" + stop_addr + " " + new_target_binary;
-      char * command_cstr = new char [command.length()+1];
-      strcpy (command_cstr, command.c_str());
+                  call_info.next_addr = insn[j+1].address;
+                  uint64_t target = x86->operands[0].imm;
+                  call_info.target_func_addr = target;
 
-      fp = popen(command_cstr, "r");
-      while (fp == NULL) {
-         printf("Failed to run command\n" );
-         printf("function addr: 0x%lx\n", func_name[i].first);
-         sleep(1);
-         fp = popen(command_cstr, "r");
-         //exit(-1);
-      }
-
-      vector<string> assembly_lines;
-      while (fgets(path, sizeof(path), fp) != NULL) {
-         string line(path);
-         assembly_lines.push_back(line);
-      }
-      fclose(fp);
-
-
-      for (unsigned k=0; k<assembly_lines.size()-1; k++){
-         string line = assembly_lines[k];
-         vector<string> words = split_line(line);
-         if ((words.size()>8) && ((words[6]=="call")||(words[6]=="callq"))){
-            // if it's a library call
-            if (words[8].substr(words[8].size()-5, words[8].size()-1)=="@plt>") continue;
-            call_site_info call_info;
-            //cout<<line;
-            call_info.addr = convert_str_2_long(words[0].substr(0,words[0].size()-1));
-            call_info.belonged_func = func_name[i].first;
-
-            string next_line = assembly_lines[k+1];
-            vector<string> words_next_line = split_line(next_line);
-
-            // if there is no instruction after the call instruction
-            if (words_next_line.size()==0) continue;
-
-            call_info.next_addr = convert_str_2_long(words_next_line[0].substr(0,words_next_line[0].size()-1));
-            int idx = 0;
-            vector<string> binary_strs;
-
-            for (unsigned j=0; j<words.size(); j++){
-               if ((words[j].length()==2)&&(is_hex(words[j]))){
-                  if (idx==5) {
-                     printf("[extract_call_site]: error in the size of a call instruction\n");
-                     exit(-1);
+                  size_t inst_size = insn[j].size;
+                  uint8_t *bytes = insn[j].bytes;
+                  if (inst_size != 5) {
+                     fprintf(stderr, "The size of call instruction is not 5 \n");
                   }
-                  binary_strs.push_back(words[j]);
-                  call_info.machine_code[idx] = convert_str_2_uint8(words[j]);
-                  idx++;
+                  // Allocate array and copy bytes
+                  memcpy(call_info.machine_code, bytes, inst_size);
+                  call_sites[call_info.addr]=call_info;
                }
-            }
+             }
+           }
 
-            string real_offset = "";
-            if (binary_strs.size()!=5) {
-               cout<<"[extract_call_site]: error: binary_strs.size()!=5\n";
-            }
-            for (unsigned j=binary_strs.size()-1; j>0; j-- ){
-               string tmp = real_offset+binary_strs[j];
-               real_offset = tmp;
-            }
-            call_info.target_func_addr = 0xffffffff & (convert_str_2_long(real_offset) + call_info.next_addr);
-            call_sites[call_info.addr]=call_info;
+           cs_free(insn, count);
+           cs_close(&handle);
+           break;
          }
       }
    }
+   elf_end(e);
+   munmap(map, st.st_size);
+   close(fd);
 }
 
 
@@ -186,7 +147,7 @@ int main(){
    command = "strip -g "+new_target_binary;
    system(command.c_str());
 
-   command = ""+ocolos_environ.nm_path+" -S -n "+new_target_binary;	
+   command = ""+ocolos_environ.nm_path+" -S -n "+new_target_binary + " 2>/dev/null";	
    char* command_cstr = new char[command.length()+1];
    strcpy (command_cstr, command.c_str());
    fp3 = popen(command_cstr, "r");
@@ -200,7 +161,7 @@ int main(){
       string line(path3);
       vector<string> words = split_line(line);
       if (words.size()>3){
-         cout<<line<<endl;
+         //cout<<line<<endl;
          if ((words[2]=="T")||(words[2]=="t")||(words[2]=="W")||(words[2]=="w")){
             long start_addr = convert_str_2_long(words[0]);
             long len_str = convert_str_2_long(words[1]);
