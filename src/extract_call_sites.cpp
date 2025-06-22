@@ -18,6 +18,7 @@
 #include <capstone/capstone.h>
 #include <sys/stat.h>
 #include <sys/mman.h>
+#include <bfd.h>
 #define N 8
 
 using namespace std;
@@ -29,7 +30,7 @@ void thread_function(vector<pair<long, long>> func_name, unordered_map<long, cal
       exit(0);
    }
 
-   sitruct stat st;
+   struct stat st;
    fstat(fd, &st);
    void *map = mmap(NULL, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
    if (map == MAP_FAILED) { perror("mmap"); close(fd); return; }
@@ -129,6 +130,65 @@ void thread_function(vector<pair<long, long>> func_name, unordered_map<long, cal
 
 
 
+vector<pair<long, long>> extract_function_ranges(string filename) {
+    bfd_init();
+
+    bfd* abfd = bfd_openr(filename.c_str(), NULL);
+    if (!abfd) {
+        fprintf(stderr, "Failed to open binary: %s\n", filename.c_str());
+        exit(1);
+    }
+
+    if (!bfd_check_format(abfd, bfd_object)) {
+        fprintf(stderr, "Invalid format: %s\n", filename.c_str());
+        bfd_close(abfd);
+        exit(1);
+    }
+
+    if (!(abfd->flags & HAS_SYMS)) {
+        fprintf(stderr, "No symbols found in file.\n");
+        bfd_close(abfd);
+        exit(1);
+    }
+
+    long symcount;
+    unsigned int size;
+    asymbol **syms;
+
+    symcount = bfd_read_minisymbols(abfd, FALSE, (void**)&syms, &size);
+    if (symcount == 0) {
+        symcount = bfd_read_minisymbols(abfd, TRUE, (void**)&syms, &size);
+    }
+
+    vector<pair<long, long>> functions;
+
+    for (long i = 0; i < symcount; i++) {
+        asymbol* sym = syms[i];
+
+        if (sym->flags & BSF_FUNCTION) {
+            long start = (long)bfd_asymbol_value(sym);
+            long length = 0;
+
+            if (i + 1 < symcount) {
+                long next = (long)bfd_asymbol_value(syms[i + 1]);
+                if (next > start) {
+                    length = next - start;
+                }
+            }
+
+            functions.emplace_back(start, length);
+        }
+    }
+
+    free(syms);
+    bfd_close(abfd);
+    return functions;
+}
+
+
+
+
+
 int main(){
    FILE *fp3;
    char path3[1000];
@@ -137,7 +197,8 @@ int main(){
      fprintf(stderr, "ELF library initialization failed.\n");
      return 1;
    }
- 
+
+   // strip the debug info otherwise the binary is too large 
    string command = "cp "+ocolos_environ.target_binary_path+" "+ocolos_environ.tmp_data_path;
    system(command.c_str());
 
@@ -147,6 +208,7 @@ int main(){
    command = "strip -g "+new_target_binary;
    system(command.c_str());
 
+   // get the starting address and size of each function
    command = ""+ocolos_environ.nm_path+" -S -n "+new_target_binary + " 2>/dev/null";	
    char* command_cstr = new char[command.length()+1];
    strcpy (command_cstr, command.c_str());
