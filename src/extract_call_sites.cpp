@@ -190,8 +190,6 @@ vector<pair<long, long>> extract_function_ranges(string filename) {
 
 
 int main(){
-   FILE *fp3;
-   char path3[1000];
    ocolos_env ocolos_environ;
    if (elf_version(EV_CURRENT) == EV_NONE) {
      fprintf(stderr, "ELF library initialization failed.\n");
@@ -245,7 +243,7 @@ int main(){
    for (int i=0; i<N; i++){
       call_sites.insert(call_sites_array[i].begin(), call_sites_array[i].end());
    }
-   printf("@@@@@@@@@@@@ the size of call_sites (final) = %lu\n", call_sites.size());
+   printf("@@@ the size of call_sites (final) = %lu\n", call_sites.size());
 
    ofstream ofs(ocolos_environ.call_sites_all_bin);
    boost::archive::binary_oarchive oa(ofs);
@@ -262,12 +260,12 @@ int main(){
          call_sites_list.insert(make_pair(it->second.target_func_addr, tmp));
       }
    }
-   printf("########### the size of call_sites_list = %lu\n", call_sites_list.size());
+   printf("@@@ the size of call_sites_list = %lu\n", call_sites_list.size());
 
    ofstream ofs1(ocolos_environ.call_sites_list_bin);
    boost::archive::binary_oarchive oa1(ofs1,boost::archive::no_codecvt);
    oa1 << call_sites_list;
 
-//   command = "rm -rf "+new_target_binary;
+   command = "rm -rf "+new_target_binary;
    system(command.c_str());
 }
