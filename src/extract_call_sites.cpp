@@ -208,32 +208,8 @@ int main(){
    command = "strip -g "+new_target_binary;
    system(command.c_str());
 
-   // get the starting address and size of each function
-   command = ""+ocolos_environ.nm_path+" -S -n "+new_target_binary + " 2>/dev/null";	
-   char* command_cstr = new char[command.length()+1];
-   strcpy (command_cstr, command.c_str());
-   fp3 = popen(command_cstr, "r");
-   if (fp3 == NULL){
-      printf("Failed to run nm on BOLTed binary\n" );
-      exit(-1);
-   }
-
-   vector<pair<long, long>> func_name;
-   while (fgets(path3, sizeof(path3), fp3) != NULL) {
-      string line(path3);
-      vector<string> words = split_line(line);
-      if (words.size()>3){
-         //cout<<line<<endl;
-         if ((words[2]=="T")||(words[2]=="t")||(words[2]=="W")||(words[2]=="w")){
-            long start_addr = convert_str_2_long(words[0]);
-            long len_str = convert_str_2_long(words[1]);
-            func_name.push_back(make_pair(start_addr, len_str));
-         }
-      }  
-   }
-
-   printf("[extract_call_sites] %ld functions in the original binary \n", func_name.size());
-   fclose(fp3);
+   // get all function: starting address, length
+   vector<pair<long, long>> func_name = extract_function_ranges(new_target_binary);
 
    int size =(int)( func_name.size()/N);
 	
