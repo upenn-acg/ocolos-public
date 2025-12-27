@@ -1,5 +1,5 @@
 # Ocolos: Online COde Layout OptimizationS
-Ocolos is the first _online_ code layout optimization system for unmodified applications written in unmanaged languages. Ocolos allows profile-guided optimization to be performed on a running process, instead of being performed offline and requiring the application to be re-launched. A description of how we implemented Ocolos and experimental results on MySQL-sysbench workloads are in [MICRO'22 paper](https://ieeexplore.ieee.org/document/9923868).
+Ocolos is the first open-sourced _online_ code layout optimization system for unmodified applications written in unmanaged languages. Ocolos allows profile-guided optimization to be performed on a running process, instead of being performed offline and requiring the application to be re-launched. A description of how we implemented Ocolos and experimental results on MySQL-sysbench workloads are in [MICRO'22 paper](https://ieeexplore.ieee.org/document/9923868).
 
 For the demonstration purpose, we integrate `MySQL` and `sysbench` to Ocolos, so this version of Ocolos ONLY works with `MySQL`. 
 
