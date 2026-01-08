@@ -1,8 +1,11 @@
 # Ocolos: Online COde Layout OptimizationS
-Ocolos is the first open-sourced _online_ code layout optimization system for unmodified applications written in unmanaged languages. Ocolos allows profile-guided optimization to be performed on a running process, instead of being performed offline and requiring the application to be re-launched. A description of how we implemented Ocolos and experimental results on MySQL-sysbench workloads are in [MICRO'22 paper](https://ieeexplore.ieee.org/document/9923868).
+Ocolos is the first open-sourced _online_ code layout optimization system for unmodified applications written in unmanaged languages. Ocolos allows profile-guided optimization to be performed on a running process, instead of being performed offline and requiring the application to be re-launched. A description of how we implemented Ocolos and experimental results on MySQL-sysbench workloads are in our [MICRO'22 paper](https://ieeexplore.ieee.org/document/9923868).
 
 For the demonstration purpose, we integrate `MySQL` and `sysbench` to Ocolos, so this version of Ocolos ONLY works with `MySQL`. 
 
+# Related Work
+
+In addition to the related work mentioned in our paper, we appreciate subsequently learning of other related systems, like [Dynamo](https://www.hpl.hp.com/techreports/1999/HPL-1999-78.pdf) from HP Labs which was a precursor to tools like Pin and DynamoRIO. The commercial [Dynimize](https://dynimize.com/product) system is also quite similar to Ocolos and targets similar database "big-code" workloads.
 
 ## Prerequisites
 Please refer instructions from links or directly run commands listed below to install prerequisites: 
