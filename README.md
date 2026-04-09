@@ -5,7 +5,7 @@ For the demonstration purpose, we integrate `MySQL` and `sysbench` to Ocolos, so
 
 # Related Work
 
-In addition to the related work mentioned in our paper, we appreciate subsequently learning of other related systems, like [Dynamo](https://www.hpl.hp.com/techreports/1999/HPL-1999-78.pdf) from HP Labs which was a precursor to tools like Pin and DynamoRIO. The commercial [Dynimize](https://dynimize.com/product) system is also quite similar to Ocolos and targets similar database "big-code" workloads.
+In addition to the related work mentioned in our paper, we appreciate subsequently learning of other related systems, like [Dynamo](https://www.hpl.hp.com/techreports/1999/HPL-1999-78.pdf) from HP Labs which was a precursor to tools like Pin and DynamoRIO, and [ADORE](https://www.microarch.org/micro36/html/pdf/lu-PerformanceRuntimeData.pdf) and [COBRA](https://ieeexplore.ieee.org/document/4343832) which also implement runtime optimizations of binary code. The commercial [Dynimize](https://dynimize.com/product) system is also quite similar to Ocolos and targets similar database "big-code" workloads.
 
 ## Prerequisites
 Please refer instructions from links or directly run commands listed below to install prerequisites: 
